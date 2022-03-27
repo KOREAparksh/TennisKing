@@ -8,15 +8,13 @@ const app = express();
 sequelize
     .sync({ force: false })
     .then(() => {
-        console.log("DB Connection has been established successfully.");
+        console.log("🚀 Database connect successfully.");
     })
     .catch((err) => {
-        console.error('Unable to connect to the database:', err);
+        console.error("❌ Unable to connect to the database:", err);
     });
 
-
 app.use(express.json());
-app.get("/", (req, res) => res.render("tennis king"));
 app.use("/", router);
 
 app.listen(port, () => {

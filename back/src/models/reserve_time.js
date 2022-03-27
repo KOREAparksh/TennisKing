@@ -14,8 +14,12 @@ module.exports = class ReserveTime extends Sequelize.Model {
                     type: Sequelize.INTEGER,
                     allowNull: false,
                 },
-                time: {
+                receipt_date: {
                     type: Sequelize.DATE,
+                    allowNull: false,
+                },
+                receipt_time: {
+                    type: Sequelize.INTEGER,
                     allowNull: false,
                 },
                 status: {
