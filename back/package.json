@@ -1,0 +1,22 @@
+{
+  "name": "myungjak",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "cross-env NODE_ENV=production node ./index.js",
+    "serve-dev": "cross-env NODE_ENV=development node ./index.js",
+    "prod": "npm run serve",
+    "start": "npm run serve-dev"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.10",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mysql2": "^2.3.3"
+  }
+}
