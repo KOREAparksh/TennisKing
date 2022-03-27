@@ -35,6 +35,12 @@ fieldset {
   display: inline-flex;
 }
 
+#InputDate{
+  margin: auto;
+  width: 40%;
+  height: 30px;
+}
+
 .TitleTag{
   font-weight: bold;
   padding-right: 30px;

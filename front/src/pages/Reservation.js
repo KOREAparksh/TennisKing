@@ -2,9 +2,16 @@ import {useState} from "react";
 
 function Reservation()
 {
+	const [min, setMin] = useState("2022-03-25");
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
 	const [reserveDates, setReserveDates] = useState([new Date()]);
+
+	const getSetDay = (e) => {
+		const date = document.getElementById('setStartDate').value;
+		setMin(date);
+		setOpenDate(e.target.value);
+	}
 
 	const onSubmit = () => {
 		if (!openDate || !openTime) {
@@ -31,7 +38,7 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<input type="date" className='InputTag InputTagText' onChange={(e) => setOpenDate(e.target.value)}>
+							<input id="setStartDate" type="date" className='InputTag InputTagText' onChange={getSetDay}>
 							</input>
 							<input type="time" className='InputTag' onChange={(e) => setOpenTime(e.target.value)}>
 							</input>
@@ -101,9 +108,10 @@ function Reservation()
 						</div>
 						<div>
 							{reserveDates.map((date) => (
-								<div className='Input'>
-									<input type="date" className='InputTag' value={date.toString()}>
+								<div id="InputDate">
+									<input type="date" className='InputTag' min={min} >
 									</input>
+
 								</div>
 							))}
 						</div>
@@ -176,6 +184,7 @@ function Reservation()
 
 				</fieldset>
 			</form>
+
 		</div>
 	);
 }
