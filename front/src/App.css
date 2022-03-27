@@ -1,3 +1,123 @@
+.Container{
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: large;
+}
+
+fieldset {
+  text-align: center;
+  border-spacing: 10px;
+}
+
+.Form{
+  width: 50%;
+  display: inline-block;
+}
+
+.Row{
+  width: 100%;
+  min-height: 50px;
+  text-align: center;
+  justify-content: center;
+}
+.Title{
+  width: 40%;
+  flex: 1;
+  display: inline-block;
+  text-align: right;
+}
+.Input{
+  width: 45%;
+  height: 30px;
+  flex: 1;
+  display: inline-flex;
+}
+
+.TitleTag{
+  font-weight: bold;
+  padding-right: 30px;
+}
+.InputTag{
+  padding-left: 30px;
+  width: 100%;
+  padding: 0%;
+}
+
+.InputTagText {
+  text-align: right;
+}
+
+.Select{
+  width: 100%;
+}
+
+#BookDate{
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+#BookDate div button{
+  margin-top: 10px;
+}
+
+#BookTime{
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+formrowtitle {
+  font-weight: bold;
+}
+
+#BookTime contents{
+  font-size: small;
+}
+
+.TableDiv{
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+.TableDiv table{
+  width: 100%;
+  margin: auto;
+  border-collapse : collapse;
+  border : 0px solid black;
+}
+
+.TableDiv table td{
+  height: 50px;
+  border : 0px solid black;
+}
+
+.TableDiv input {
+  margin-right: 10px;
+};
+
+#OptionDiv {
+  width: 100%;
+  flex-direction: row;
+  align-items : stretch;
+  justify-items: stretch;
+  display: flex;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+  margin-top: 20px;
+}
+
+/**********************************************************/
+
 .App {
   text-align: center;
 }
