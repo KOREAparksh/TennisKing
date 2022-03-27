@@ -2,10 +2,26 @@ import {useState} from "react";
 
 function Reservation()
 {
-	const [min, setMin] = useState("2022-03-25");
+	const getToday = () =>{
+		const date = new Date();
+		const y = date.getFullYear();
+		const temp = date.getMonth() + 1;
+		var m;
+		if (temp.toString().length < 2)
+			m = "0" + temp.toString();
+		else
+			m = temp.toString();
+		const d = date.getDate();
+		return y+"-"+m+"-"+d;
+	}
+
+	const today = getToday();
+	const [min, setMin] = useState("2022-02-25");
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
 	const [reserveDates, setReserveDates] = useState([new Date()]);
+
+
 
 	const getSetDay = (e) => {
 		const date = document.getElementById('setStartDate').value;
@@ -16,9 +32,15 @@ function Reservation()
 	const onSubmit = () => {
 		if (!openDate || !openTime) {
 			alert('Check Date or Time');
-			return ;
+			return false;
+		}
+		if (document.getElementById('facility').value === '')
+		{
+			alert('Check Date or Time');
+			return false;
 		}
 		alert(`${openDate} ${openTime}`);
+		return false;
 	}
 
 	const addDate = (e) => {
@@ -38,9 +60,9 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<input id="setStartDate" type="date" className='InputTag InputTagText' onChange={getSetDay}>
+							<input id="setStartDate" min={today} type="date" className='InputTag InputTagText' onChange={getSetDay} required>
 							</input>
-							<input type="time" className='InputTag' onChange={(e) => setOpenTime(e.target.value)}>
+							<input type="time" className='InputTag' onChange={(e) => setOpenTime(e.target.value)} required>
 							</input>
 						</div>
 					</div>
@@ -51,7 +73,7 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<select id="facility" name="facility" className='Select'>
+							<select id="facility" name="facility" className='Select' required>
 								<option value="volvo">Volvo</option>
 								<option value="saab">Saab</option>
 								<option value="fiat">Fiat</option>
@@ -66,7 +88,7 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<select id="facility-detail1" name="facility-detail1" className='Select'>
+							<select id="facility-detail1" name="facility-detail1" className='Select' required>
 								<option value="volvo">Volvo</option>
 								<option value="saab">Saab</option>
 								<option value="fiat">Fiat</option>
@@ -81,7 +103,7 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<select id="facility-detail2" name="facility-detail2" className='Select'>
+							<select id="facility-detail2" name="facility-detail2" className='Select' required>
 								<option value="volvo">Volvo</option>
 								<option value="saab">Saab</option>
 								<option value="fiat">Fiat</option>
@@ -96,7 +118,7 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<input type="number" className='InputTag'>
+							<input type="number" className='InputTag' required>
 							</input>
 						</div>
 					</div>
@@ -109,7 +131,7 @@ function Reservation()
 						<div>
 							{reserveDates.map((date) => (
 								<div id="InputDate">
-									<input type="date" className='InputTag' min={min} >
+									<input type="date" className='InputTag' min={min} required>
 									</input>
 
 								</div>
@@ -180,7 +202,7 @@ function Reservation()
 						</div>
 					</div>
 
-					<button onClick={onSubmit}>예약</button>
+					<button type="submit" onClick={onSubmit}>예약</button>
 
 				</fieldset>
 			</form>
