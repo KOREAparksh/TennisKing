@@ -7,6 +7,7 @@ const ReserveTime = require("../models/reserve_time");
 
 const terminus = require("../middlewares/terminus");
 const ApiError = require("../modules/api.error");
+const httpStatus = require("http-status");
 const getSessionId = require("../modules/login");
 const { getRentData, executeRent } = require("../controllers/rent");
 
@@ -34,9 +35,9 @@ router.get(
                 })
             );
 
-            return { status: 200, message: "OK" };
+            return { status: httpStatus.OK, message: "OK" };
         } catch (err) {
-            throw new ApiError(400, "잘못된 요청입니다.");
+            throw new ApiError(httpStatus.BAD_REQUEST, "잘못된 요청입니다.");
         }
     })
 );
