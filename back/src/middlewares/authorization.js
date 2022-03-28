@@ -12,15 +12,18 @@ const authorization = (req, res, next) => {
     const accessVerify = JWT.accessVerify(access, refresh);
     const refreshVerify = JWT.refreshVerity(access, refresh);
 
-    if (accessVerify.valid || refreshVerify.valid) {
-        const newAccess = accessVerify.changed || refreshVerify.changed;
-        const newRefresh = accessVerify.changed || refreshVerify.changed;
-
-        if (newAccess && newRefresh) {
-            req.headers.changed = true;
-        }
-
+    if (accessVerify.valid && refreshVerify.valid) {
         next();
+    } else if (accessVerify.valid || refreshVerify.valid) {
+        if (!accessVerify.valid && accessVerify.changed) {
+            req.headers.changed = true;
+            next();
+        } else if (!refreshVerify.valid && refreshVerify.changed) {
+            req.headers.changed = true;
+            next();
+        } else {
+            next(new ApiError(401, "UnAuthorized"));
+        }
     } else {
         next(new ApiError(401, "UnAuthorized"));
     }

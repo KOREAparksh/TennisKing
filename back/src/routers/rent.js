@@ -36,7 +36,6 @@ router.get(
 
             return { status: 200, message: "OK" };
         } catch (err) {
-            console.log(err);
             throw new ApiError(400, "잘못된 요청입니다.");
         }
     })
