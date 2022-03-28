@@ -1,8 +1,11 @@
 const express = require("express");
 const { sequelize } = require("./models");
 const router = require("./routers");
+const cookieParser = require("cookie-parser");
 
-const port = process.env.PORT || "3000";
+const { notFound, errorConverter, errorHandler } = require("./middlewares/error");
+
+const port = process.env.PORT || 5000;
 const app = express();
 
 sequelize
@@ -16,7 +19,12 @@ sequelize
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/", router);
+app.use(cookieParser());
+
+app.use("/api", router);
+app.use(notFound);
+app.use(errorConverter);
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`======= ENV: ${process.env.NODE_ENV} =======`);
