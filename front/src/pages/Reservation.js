@@ -15,18 +15,18 @@ function Reservation()
 		return y+"-"+m+"-"+d;
 	}
 
+	const[isStartDateChecked, setIsStartDateChecked] = useState(false);
 	const today = getToday();
 	const [min, setMin] = useState("2022-02-25");
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
 	const [reserveDates, setReserveDates] = useState([new Date()]);
 
-
-
 	const getSetDay = (e) => {
 		const date = document.getElementById('setStartDate').value;
 		setMin(date);
 		setOpenDate(e.target.value);
+		setIsStartDateChecked(true)
 	}
 
 	const onSubmit = () => {
@@ -131,7 +131,7 @@ function Reservation()
 						<div>
 							{reserveDates.map((date) => (
 								<div id="InputDate">
-									<input type="date" className='InputTag' min={min} required>
+									<input type="date" className='InputTag' min={min} required disabled={!isStartDateChecked}>
 									</input>
 
 								</div>
