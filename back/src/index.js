@@ -2,11 +2,20 @@ const express = require("express");
 const { sequelize } = require("./models");
 const router = require("./routers");
 const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
+const cors = require("cors");
 
 const { notFound, errorConverter, errorHandler } = require("./middlewares/error");
+const logger = require("./modules/logger");
 
 const port = process.env.PORT || 5000;
 const app = express();
+
+const corsOptions = {
+    origin: ["http://localhost:3000", "https://20.41.103.72"],
+    credentials: true,
+    method: ["POST", "GET", "PUT", "PATCH", "DELETE"],
+};
 
 sequelize
     .sync({ force: false })
@@ -17,6 +26,8 @@ sequelize
         console.error("❌ Unable to connect to the database:", err);
     });
 
+app.use(cors(corsOptions));
+app.use(morgan("dev", { stream: logger.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

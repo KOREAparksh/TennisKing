@@ -1,3 +1,4 @@
+const httpStatus = require("http-status");
 const JWT = require("../modules/jwt");
 
 const terminus = (fn) => (req, res, next) => {
@@ -7,7 +8,7 @@ const terminus = (fn) => (req, res, next) => {
                 res.cookie("access", JWT.accessSign(), { httpOnly: true, secure: true, sameSite: "none" });
                 res.cookie("refresh", JWT.refreshSign(), { httpOnly: true, secure: true, sameSite: "none" });
             }
-            res.status(200).json(result);
+            res.status(httpStatus.OK).json(result);
         })
         .catch((err) => next(err));
 };

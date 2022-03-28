@@ -5,6 +5,7 @@ const Reserve = require("../models/reserve");
 const ReserveTime = require("../models/reserve_time");
 
 const terminus = require("../middlewares/terminus");
+const httpStatus = require("http-status");
 
 router.post(
     "/",
@@ -38,7 +39,7 @@ router.post(
             })
         );
 
-        return { status: 200, message: "OK" };
+        return { status: httpStatus.OK, message: "OK" };
     })
 );
 
