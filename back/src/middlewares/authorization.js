@@ -13,7 +13,6 @@ const authorization = (req, res, next) => {
     const accessVerify = JWT.accessVerify(access, refresh);
     const refreshVerify = JWT.refreshVerity(access, refresh);
 
-    console.log(accessVerify, refreshVerify);
     if (accessVerify.valid && refreshVerify.valid) {
         next();
     } else if (accessVerify.valid || refreshVerify.valid) {
