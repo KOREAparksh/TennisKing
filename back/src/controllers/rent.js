@@ -36,7 +36,7 @@ const getRentData = async (sessionId, place, reserveTime, member) => {
         const $ = cheerio.load(value.data);
 
         return {
-            "receipt_time[]": $("#receipt_time").val(),
+            "receipt_time[]": rentInputData["receipt_time[]"],
             "item_cd_list[]": $('select[name="item_cd_list[]"] option').val(),
             "item_idx_not_list[]": $('input[name="item_idx_not_list[]"]').val(),
             "facility_count[]": $('input[name="facility_count[]"]').val(),
@@ -47,13 +47,13 @@ const getRentData = async (sessionId, place, reserveTime, member) => {
             formcheck: $("#formcheck").val(),
             URL: "https://www.nyj.go.kr/rent",
             SSL: "https://www.nyj.go.kr/rent",
-            comcd: $("#comcd").val(),
+            comcd: rentInputData.comcd,
             sale_amt: $("#sale_amt").val(),
-            part_cd: $("#part_cd").val(),
-            place_cd: $("#place_cd").val(),
+            part_cd: rentInputData.partcd,
+            place_cd: rentInputData.placecd,
             team_seq: $("#team_seq").val(),
             payment_total_amt: "5,000", // 이부분 데이터 공정 필요?
-            receipt_date: $("#receipt_date").val(),
+            receipt_date: rentInputData.receipt_date,
             select_group: $("#select_group").val(),
             appli_name: "%B1%E8%BC%BA%BC%F6", // 이름 변경 필요
             club_name: "%B1%E8%BC%BA%BC%F6", // 단체이름 변경 필요

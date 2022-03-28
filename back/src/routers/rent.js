@@ -8,6 +8,7 @@ const ReserveTime = require("../models/reserve_time");
 const terminus = require("../middlewares/terminus");
 const ApiError = require("../modules/api.error");
 const httpStatus = require("http-status");
+const logger = require("../modules/logger");
 const getSessionId = require("../modules/login");
 const { getRentData, executeRent } = require("../controllers/rent");
 
@@ -23,16 +24,26 @@ router.get(
 
             if (!reserves) throw new Error();
 
+            const start = new Date();
+
             await Promise.all(
                 reserves.ReserveTimes.map(async (value) => {
                     const sessionId = await getSessionId();
-
-                    executeRent(
-                        value.dataValues.id,
+                    const rentData = await getRentData(
                         sessionId,
-                        await getRentData(sessionId, reserves.Place.dataValues, value.dataValues, reserves.dataValues.member)
+                        reserves.Place.dataValues,
+                        value.dataValues,
+                        reserves.dataValues.member
                     );
+
+                    executeRent(value.dataValues.id, sessionId, rentData);
                 })
+            );
+
+            const end = new Date();
+
+            logger.reservationTime(
+                `Total ${reserves.ReserveTimes.length} items were executed in ${(end - start) / 1000} seconds!!`
             );
 
             return { status: httpStatus.OK, message: "OK" };
