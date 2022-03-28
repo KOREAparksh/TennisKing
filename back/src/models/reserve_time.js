@@ -30,7 +30,7 @@ module.exports = class ReserveTime extends Sequelize.Model {
             },
             {
                 sequelize,
-                timestamps: false,
+                timestamps: true,
                 underscored: true,
                 modelName: "ReserveTime",
                 tableName: "reserve_times",
@@ -39,5 +39,12 @@ module.exports = class ReserveTime extends Sequelize.Model {
                 collate: "utf8mb4_0900_ai_ci",
             }
         );
+    }
+
+    static associate(db) {
+        db.ReserveTime.belongsTo(db.Reserve, {
+            foreignKey: "reserve_id",
+            sourceKey: "id",
+        });
     }
 };

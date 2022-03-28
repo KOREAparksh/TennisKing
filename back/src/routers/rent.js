@@ -1,15 +1,45 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/execute", (req, res) => {
-    const reserveId = parseInt(req.body.reserve_id, 10);
+const Place = require("../models/place");
+const Reserve = require("../models/reserve");
+const ReserveTime = require("../models/reserve_time");
 
-    /**
-     * reserve_id로 reserves 테이블 조회 후
-     * reserve_id를 foerign key로 갖고있는 reserve_times 테이블 데이터 모두 조회
-     */
+const terminus = require("../middlewares/terminus");
+const ApiError = require("../modules/api.error");
+const getSessionId = require("../modules/login");
+const { getRentData, executeRent } = require("../controllers/rent");
 
-    /** 여기에 reserves 테이블의 place_id로 places 테이블 조회한 데이터 필요 */
-});
+router.get(
+    "/execute/:id",
+    terminus(async (req, res) => {
+        try {
+            const reserveId = parseInt(req.params.id, 10);
+            const reserves = await Reserve.findOne({
+                include: [{ model: Place }, { model: ReserveTime }],
+                where: { id: reserveId },
+            });
+
+            if (!reserves) throw new Error();
+
+            await Promise.all(
+                reserves.ReserveTimes.map(async (value) => {
+                    const sessionId = await getSessionId();
+
+                    executeRent(
+                        value.dataValues.id,
+                        sessionId,
+                        await getRentData(sessionId, reserves.Place.dataValues, value.dataValues, reserves.dataValues.member)
+                    );
+                })
+            );
+
+            return { status: 200, message: "OK" };
+        } catch (err) {
+            console.log(err);
+            throw new ApiError(400, "잘못된 요청입니다.");
+        }
+    })
+);
 
 module.exports = router;
