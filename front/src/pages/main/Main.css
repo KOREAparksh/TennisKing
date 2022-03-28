@@ -1,0 +1,25 @@
+#Container{
+	width: 100%;
+	margin: auto;
+	justify-content: center;
+	align-content: center;
+	display: flex;
+	flex-wrap: wrap;
+	min-height: max-content;
+	flex-direction: column;
+	min-height: 100vh;
+	text-align: center;
+}
+
+.Button{
+	width: 400px;
+	height: 50px;
+}
+
+.Margin50{
+	height: 50px;
+}
+
+#VersionText{
+	font-size: small;
+}
