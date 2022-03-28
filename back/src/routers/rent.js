@@ -1,15 +1,45 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/execute", (req, res) => {
-    const reserveId = parseInt(req.body.reserve_id, 10);
+const Place = require("../models/place");
+const Reserve = require("../models/reserve");
+const ReserveTime = require("../models/reserve_time");
 
-    /**
-     * reserve_id로 reserves 테이블 조회 후
-     * reserve_id를 foerign key로 갖고있는 reserve_times 테이블 데이터 모두 조회
-     */
+const getSessionId = require("../modules/login");
+const getRentData = require("../modules/rentInput");
+const executeRent = require("../modules/rent");
 
-    /** 여기에 reserves 테이블의 place_id로 places 테이블 조회한 데이터 필요 */
+router.post("/execute", async (req, res) => {
+    try {
+        const reserveId = parseInt(req.body.reserve_id, 10);
+        /**
+         * 예약 정보, 테니스장 정보 inner join을 통해 한번에 갖고옴
+         */
+        const reserves = await Reserve.findOne({
+            include: [{ model: Place }, { model: ReserveTime }],
+            where: { id: reserveId },
+        });
+
+        Promise.all(
+            reserves.ReserveTimes.map(async (value) => {
+                const sessionId = await getSessionId();
+
+                executeRent(
+                    sessionId,
+                    await getRentData(sessionId, reserves.Place.dataValues, value.dataValues, reserves.dataValues.member)
+                );
+            })
+        )
+            .then((value) => {
+                res.send("ok");
+            })
+            .catch((err) => {
+                res.send("fail");
+            });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ status: 400, message: "잘못된 요청입니다." });
+    }
 });
 
 module.exports = router;

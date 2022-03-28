@@ -18,19 +18,21 @@ router.post("/", async (req, res) => {
         use_facility: facility,
     });
 
-    reserveTimes.map(async (value) => {
-        const hour = new Date(value).getHours();
-        const receiptTime =
-            parseInt(hour / 2, 10) -
-            3 +
-            (placeId === 1 ? 1833 : placeId === 2 ? 2210 : hour < 18 ? 2218 : hour === 18 ? 3305 : 2893);
+    Promise.all(
+        reserveTimes.map((value) => {
+            const hour = new Date(value).getHours();
+            const receiptTime =
+                parseInt(hour / 2, 10) -
+                3 +
+                (placeId === 1 ? 1833 : placeId === 2 ? 2210 : hour < 18 ? 2218 : hour === 18 ? 3305 : 2893);
 
-        await ReserveTime.create({
-            reserve_id: reserve.id,
-            receipt_date: new Date(value),
-            receipt_time: receiptTime,
-        });
-    });
+            ReserveTime.create({
+                reserve_id: reserve.id,
+                receipt_date: new Date(value),
+                receipt_time: receiptTime,
+            });
+        })
+    ).then(() => res.status(200).json({ result: "ok" }));
 });
 
 module.exports = router;

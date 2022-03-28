@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const placeRouter = require("./places");
+const placeRouter = require("./place");
 const rentRouter = require("./rent");
-const reserveRouter = require("./reserves");
+const reserveRouter = require("./reserve");
 
 router.use("/places", placeRouter);
 router.use("/reserves", reserveRouter);
