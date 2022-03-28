@@ -42,7 +42,7 @@ module.exports = class ReserveTime extends Sequelize.Model {
     }
 
     static associate(db) {
-        db.ReserveTime.belongsTo(db.Reserve, {
+        ReserveTime.Reserve = db.ReserveTime.belongsTo(db.Reserve, {
             foreignKey: "reserve_id",
             sourceKey: "id",
         });
