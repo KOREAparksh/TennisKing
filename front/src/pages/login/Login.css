@@ -20,4 +20,15 @@
 	width: 350px;
 	height: 50px;
 	font-size: medium;
+	margin-bottom: 10px;
+}
+
+#LoginButton {
+	width: 100px;
+	height: 30px;
+}
+
+#WrongCode{
+	color: red;
+	margin-bottom: 10px;
 }
