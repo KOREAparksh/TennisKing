@@ -3,8 +3,9 @@ const router = express.Router();
 require("dotenv").config();
 
 const terminus = require("../middlewares/terminus");
-const ApiError = require("../modules/api.error");
 const JWT = require("../modules/jwt");
+const ApiError = require("../modules/api.error");
+const httpStatus = require("http-status");
 const { addZero } = require("../modules/datetime");
 
 router.post(
@@ -17,9 +18,9 @@ router.post(
         if (code === `${process.env.CODE}${month}${day}`) {
             req.headers.changed = true;
 
-            return { status: 200, message: "OK" };
+            return { status: httpStatus.OK, message: "OK" };
         } else {
-            throw new ApiError(401, "UnAuthorized");
+            throw new ApiError(httpStatus.UNAUTHORIZED, "UnAuthorized");
         }
     })
 );

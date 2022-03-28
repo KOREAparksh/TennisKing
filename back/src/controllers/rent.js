@@ -4,6 +4,7 @@ const cheerio = require("cheerio");
 
 const ReserveTime = require("../models/reserve_time");
 
+const logger = require("../modules/logger");
 const { addZero, gmt, rentDate } = require("../modules/datetime");
 
 const getRentData = async (sessionId, place, reserveTime, member) => {
@@ -81,15 +82,15 @@ const executeRent = async (reserveTimeId, sessionId, rentData) => {
     const url = rentProcess.request.res.responseUrl.split("/").slice(-1)[0];
 
     if (url.match(/[0-9]/g)) {
-        ReserveTime.update(
-            {
-                receipt_number: parseInt(url, 10),
-                status: 1,
-            },
-            { where: { id: reserveTimeId } }
+        ReserveTime.update({ status: 1 }, { where: { id: reserveTimeId } });
+        logger.reservation(
+            `Receipt: ${url}, Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${rentData.part_cd}-${rentData.place_cd}`
         );
     } else {
         ReserveTime.update({ status: 2 }, { where: { id: reserveTimeId } });
+        logger.reservationFail(
+            `Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${rentData.part_cd}-${rentData.place_cd}`
+        );
     }
 };
 

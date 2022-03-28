@@ -7,6 +7,7 @@ dev
 *.env
 *.dev
 .DS_Store
+logs
 
 # Docker
 Dockerfile

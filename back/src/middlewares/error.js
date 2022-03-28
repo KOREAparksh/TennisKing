@@ -1,14 +1,16 @@
 const ApiError = require("../modules/api.error");
+const httpStatus = require("http-status");
+const logger = require("../modules/logger");
 
 const notFound = (req, res, next) => {
-    next(new ApiError(404, "Not Found"));
+    next(new ApiError(httpStatus.NOT_FOUND, "Not Found"));
 };
 
 const errorConverter = (err, req, res, next) => {
     let error = err;
     if (!(err instanceof ApiError)) {
-        const statusCode = error.statusCode || 500;
-        const message = error.message;
+        const statusCode = error.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
+        const message = error.message || httpStatus[statusCode];
         error = new ApiError(statusCode, message, err.stack);
     }
     next(error);
@@ -24,10 +26,12 @@ const errorHandler = (err, req, res, next) => {
 
     if (process.env.NODE_ENV === "development") {
         response.stack = stack;
+    }
+
+    if (statusCode === httpStatus.INTERNAL_SERVER_ERROR) {
+        logger.error(stack);
     } else {
-        if (statusCode === 500) {
-            response.message = "서버 오류";
-        }
+        logger.warn(stack);
     }
 
     res.status(statusCode).send(response);
