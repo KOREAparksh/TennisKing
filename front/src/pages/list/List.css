@@ -1,34 +1,67 @@
 #Container{
 	margin: auto;
+	font-size: large;
 }
 
 .ListTile{
 	width: 50%;
-	border: 1px solid black;
+	border: 2px solid black;
+	border-radius: 50px;
+	background-color: bisque;
+
 }
 
 .StateContainer{
 	width: 90%;
 	text-align: right;
 	font-weight: bold;
+	font-size: x-large;
 }
 
 #ContentsContainer{
-	background-color: bisque;
+	display: flex;
+	font-size: large;
 }
 
-.Contents{
+.ContentsBlock{
 	width: 50%;
-	background-color: chocolate;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
 }
 
-.Title{
-	width: 100%;
+.TitleDiv{
 	font-weight: bold;
-	background-color: aqua;
 	text-align: left;
-	padding-left: 30px;
+	margin-left: 30px;
 }
+.TitleDivRight{
+	font-weight: bold;
+	text-align: right;
+	margin-right: 30px;
+}
+
+.ContentsDiv{
+	text-align: left;
+	margin-left: 30px;
+}
+
+.ContentsDivRight{
+	text-align: right;
+	margin-right: 30px;
+}
+
+
+#ButtonDiv{
+	justify-items: stretch;
+}
+
+
+.Button{
+	width: 30%;
+	font-size: large;
+	border-radius: 50px;
+}
+
 
 .Green{
 	color: green;
@@ -40,6 +73,9 @@
 	color: red;
 }
 
+.Margin10{
+	height: 10px;
+}
 .Margin25{
 	height: 25px;
 }

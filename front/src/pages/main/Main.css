@@ -14,6 +14,7 @@
 .Button{
 	width: 400px;
 	height: 50px;
+	border-radius: 50px;
 }
 
 .Margin50{
