@@ -41,7 +41,7 @@ module.exports = class Place extends Sequelize.Model {
             },
             {
                 sequelize,
-                timestamps: false,
+                timestamps: true,
                 underscored: true,
                 modelName: "Place",
                 tableName: "places",
@@ -50,5 +50,12 @@ module.exports = class Place extends Sequelize.Model {
                 collate: "utf8mb4_general_ci",
             }
         );
+    }
+
+    static associate(db) {
+        db.Place.hasMany(db.Reserve, {
+            foreignKey: "place_id",
+            sourceKey: "id",
+        });
     }
 };
