@@ -26,20 +26,10 @@ module.exports = class Reserve extends Sequelize.Model {
                     type: Sequelize.TINYINT,
                     allowNull: false,
                 },
-                created_at: {
-                    type: Sequelize.DATE,
-                    allowNull: false,
-                    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-                },
-                updated_at: {
-                    type: Sequelize.DATE,
-                    allowNull: false,
-                    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-                },
             },
             {
                 sequelize,
-                timestamps: false,
+                timestamps: true,
                 underscored: true,
                 modelName: "Reserve",
                 tableName: "reserves",
@@ -48,5 +38,17 @@ module.exports = class Reserve extends Sequelize.Model {
                 collate: "utf8mb4_0900_ai_ci",
             }
         );
+    }
+
+    static associate(db) {
+        db.Reserve.hasMany(db.ReserveTime, {
+            foreignKey: "reserve_id",
+            sourceKey: "id",
+        });
+
+        db.Reserve.belongsTo(db.Place, {
+            foreignKey: "place_id",
+            sourceKey: "id",
+        });
     }
 };

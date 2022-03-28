@@ -12,7 +12,7 @@ module.exports = class AuthCdInfo extends Sequelize.Model {
                 create_time: {
                     type: Sequelize.DATE,
                     allowNull: false,
-                    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+                    defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
                 },
                 update_time: {
                     type: Sequelize.DATE,
@@ -21,12 +21,12 @@ module.exports = class AuthCdInfo extends Sequelize.Model {
                 use_yn: {
                     type: Sequelize.CHAR,
                     allowNull: false,
-                    defaultValue: 'Y',
+                    defaultValue: "Y",
                 },
             },
             {
                 sequelize,
-                timestamps: false,
+                timestamps: true,
                 underscored: true,
                 modelName: "AuthCdInfo",
                 tableName: "auth_cd_info",
