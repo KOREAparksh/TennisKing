@@ -87,11 +87,11 @@ const infoLog = winston.createLogger({
 });
 
 const reservationLog = winston.createLogger({
-    level: "debug",
+    level: "info",
     format: formatOption,
     transports: [
         new winstonDaily({
-            level: "debug",
+            level: "info",
             datePattern: "YYYY-MM-DD",
             dirname: "logs/reservation",
             filename: "%DATE%.reservation.log",
@@ -102,14 +102,29 @@ const reservationLog = winston.createLogger({
 });
 
 const reservationFailLog = winston.createLogger({
-    level: "debug",
+    level: "info",
     format: formatOption,
     transports: [
         new winstonDaily({
-            level: "debug",
+            level: "info",
             datePattern: "YYYY-MM-DD",
             dirname: "logs/reservation_fail",
             filename: "%DATE%.reservation.fail.log",
+            maxFiles: "7d",
+            zippedArchive: true,
+        }),
+    ],
+});
+
+const reservationTimeLog = winston.createLogger({
+    level: "info",
+    format: formatOption,
+    transports: [
+        new winstonDaily({
+            level: "info",
+            datePattern: "YYYY-MM-DD",
+            dirname: "logs/reservation_time",
+            filename: "%DATE%.reservation.time.log",
             maxFiles: "7d",
             zippedArchive: true,
         }),
@@ -133,6 +148,10 @@ const logger = {
 
     reservationFail(message) {
         return reservationFailLog.info(message);
+    },
+
+    reservationTime(message) {
+        return reservationTimeLog.info(message);
     },
 
     http(message) {
