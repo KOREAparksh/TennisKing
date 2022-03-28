@@ -1,4 +1,23 @@
-.Container{
+#Container{
+	width: 100%;
 	margin: auto;
 	justify-content: center;
+	align-content: center;
+	display: flex;
+	flex-wrap: wrap;
+	min-height: max-content;
+	flex-direction: column;
+	min-height: 100vh;
+	text-align: center;
+}
+
+#Logo{
+	font-size: 40px;
+	margin-bottom: 150px;
+}
+
+#InputCode{
+	width: 350px;
+	height: 50px;
+	font-size: medium;
 }
