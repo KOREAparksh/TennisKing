@@ -2,7 +2,9 @@ const axios = require("axios");
 const qs = require("qs");
 const cheerio = require("cheerio");
 
-const { addZero, gmt, rentDate } = require("./datetime");
+const ReserveTime = require("../models/reserve_time");
+
+const { addZero, gmt, rentDate } = require("../modules/datetime");
 
 const getRentData = async (sessionId, place, reserveTime, member) => {
     const receiptDate = gmt(reserveTime.receipt_date);
@@ -67,4 +69,28 @@ const getRentData = async (sessionId, place, reserveTime, member) => {
     });
 };
 
-module.exports = getRentData;
+const executeRent = async (reserveTimeId, sessionId, rentData) => {
+    const rentOptions = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded", cookie: sessionId },
+        data: qs.stringify(rentData),
+        url: "https://www.nyj.go.kr/rent/rent/process/rent",
+    };
+
+    const rentProcess = await axios(rentOptions);
+    const url = rentProcess.request.res.responseUrl.split("/").slice(-1)[0];
+
+    if (url.match(/[0-9]/g)) {
+        ReserveTime.update(
+            {
+                receipt_number: parseInt(url, 10),
+                status: 1,
+            },
+            { where: { id: reserveTimeId } }
+        );
+    } else {
+        ReserveTime.update({ status: 2 }, { where: { id: reserveTimeId } });
+    }
+};
+
+module.exports = { getRentData, executeRent };

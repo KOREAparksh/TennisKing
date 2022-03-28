@@ -15,8 +15,9 @@ const getSessionId = async () => {
         data: qs.stringify(loginData),
         url: "https://www.nyj.go.kr/rent/member/process",
     };
+    const loginProcess = await axios(loginOptions);
+    const cookies = loginProcess.headers["set-cookie"];
 
-    const cookies = (await axios(loginOptions)).headers["set-cookie"];
     return cookies[2].split(" ")[0];
 };
 
