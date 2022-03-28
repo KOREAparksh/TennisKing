@@ -1,5 +1,5 @@
 import './App.css';
-import Reservation from "./pages/Reservation";
+import Reservation from './pages/reservations/Reservation';
 
 function App() {
 	return (
