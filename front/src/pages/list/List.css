@@ -1,0 +1,49 @@
+#Container{
+	margin: auto;
+}
+
+.ListTile{
+	width: 50%;
+	border: 1px solid black;
+}
+
+.StateContainer{
+	width: 90%;
+	text-align: right;
+	font-weight: bold;
+}
+
+#ContentsContainer{
+	background-color: bisque;
+}
+
+.Contents{
+	width: 50%;
+	background-color: chocolate;
+}
+
+.Title{
+	width: 100%;
+	font-weight: bold;
+	background-color: aqua;
+	text-align: left;
+	padding-left: 30px;
+}
+
+.Green{
+	color: green;
+}
+.Blue{
+	color: blue;
+}
+.Red{
+	color: red;
+}
+
+.Margin25{
+	height: 25px;
+}
+
+.Margin50{
+	height: 50px;
+}
