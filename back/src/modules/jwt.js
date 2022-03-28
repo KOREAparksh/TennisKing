@@ -20,14 +20,10 @@ const JWT = {
             return { valid: true };
         } catch (err) {
             if (err.message === "jwt expired") {
-                if (JWT.refreshVerity(refreshToken).valid === true) {
-                    return {
-                        valid: true,
-                        changed: true,
-                    };
-                } else {
-                    return { valid: false };
-                }
+                return {
+                    valid: false,
+                    changed: JWT.refreshVerity(accessToken, refreshToken).valid,
+                };
             } else {
                 return { valid: false };
             }
@@ -40,14 +36,10 @@ const JWT = {
             return { valid: true };
         } catch (err) {
             if (err.message === "jwt expired") {
-                if (JWT.accessVerify(accessToken).valid === true) {
-                    return {
-                        valid: true,
-                        changed: true,
-                    };
-                } else {
-                    return { valid: false };
-                }
+                return {
+                    valid: false,
+                    changed: JWT.accessVerify(accessToken, refreshToken).valid,
+                };
             } else {
                 return { valid: false };
             }
