@@ -40,11 +40,11 @@ router.get(
 
                         await executeRent(value.dataValues.id, sessionId, rentData, start);
 
-                        const reserves = await Reserve.findOne({
-                            include: [{ model: Place }, { model: ReserveTime }],
+                        const executed = await Reserve.findOne({
+                            include: [{ model: ReserveTime }],
                             where: { id: reserveId },
                         });
-                        if (reserves.reserveTimes.filter((value) => value.status !== 1).length === 0) {
+                        if (executed.reserveTimes.filter((value) => value.status !== 1).length === 0) {
                             await Reserve.update({ status: 1 }, { where: { id: reserveId } });
                         } else {
                             await Reserve.update({ status: 2 }, { where: { id: reserveId } });
