@@ -7,6 +7,7 @@ import Reservation from './pages/reservations/Reservation';
 import {Route, Routes} from "react-router-dom";
 
 function App() {
+	console.log("대가리");
   return (
     <Routes>
       <Route exact path="/" element={<Main/>}/>

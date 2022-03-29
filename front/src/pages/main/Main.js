@@ -6,8 +6,9 @@ import {getPlaces} from "../../api/api";
 function Main() {
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
+    console.log("123");
     getPlaces().then(() => setLoading(false)); // 토큰 확인용
-  })
+  }, [])
 
   const onTapNewButton = () => {
 

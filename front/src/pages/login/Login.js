@@ -5,7 +5,10 @@ import {useNavigate} from 'react-router-dom'
 
 function Login(props) {
   const [text, setText] = useState("");
+  const [errorText, setErrorText] = useState("");
   const [isValid, setIsValid] = useState(true);
+
+
   const navigate = useNavigate();
 
   const onChangeText = (object) => {
@@ -13,15 +16,20 @@ function Login(props) {
   }
 
   const onSubmit = async (e) => {
+    console.log("onSubmit enter")
     e.preventDefault();
+    if (text.length <= 0)
+      return false;
     try {
-      await api.login(text);
-      navigate('/');
+      const data = await api.login(text);
+      if (data === 200)
+        navigate('/')
     } catch (err) {
       if (err.response.status === 401) {
         setIsValid(false);
       }
     }
+    return false
   }
 
 
@@ -31,14 +39,14 @@ function Login(props) {
         ☆환 서완우 전무님 영☆
       </div>
       <div id="Test">
-        <form onSubmit={onSubmit}>
+        <form >
           <div>
             <input type="text" id="InputCode" placeholder="코드를 입력하세요"
                    value={text} onChange={onChangeText}/>
           </div>
-          <div id="WrongCode" hidden={isValid}>코드가 올바르지 않습니다.</div>
+          <div id="WrongCode" hidden={!isValid}>{errorText}</div>
           <div>
-            <input type="button" id="LoginButton" value="입장"/>
+            <input type="button" id="LoginButton" value="입장" onClick={onSubmit}/>
           </div>
         </form>
       </div>
