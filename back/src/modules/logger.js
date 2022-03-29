@@ -169,7 +169,7 @@ const logger = {
         return reservationTimeLog.info(message);
     },
 
-    cronLog(message) {
+    cron(message) {
         return cronLog.info(message);
     },
 

@@ -26,6 +26,11 @@ module.exports = class Reserve extends Sequelize.Model {
                     type: Sequelize.TINYINT,
                     allowNull: false,
                 },
+                status: {
+                    type: Sequelize.TINYINT,
+                    allowNull: false,
+                    defaultValue: 0,
+                },
             },
             {
                 sequelize,

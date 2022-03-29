@@ -34,6 +34,7 @@ module.exports = {
             host: "127.0.0.1",
             port: process.env.DATABASE_PORT,
             timezone: "+09:00",
+            logging: false,
         },
     },
 };

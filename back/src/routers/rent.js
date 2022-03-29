@@ -28,23 +28,36 @@ router.get(
         Promise.allSettled(
             reserves.ReserveTimes.map(async (value) => {
                 try {
-                    const start = new Date();
-                    const sessionId = await getSessionId();
-                    const rentData = await getRentData(
-                        sessionId,
-                        reserves.Place.dataValues,
-                        value.dataValues,
-                        reserves.dataValues.member
-                    );
+                    if (value.dataValues.status !== 1) {
+                        const start = new Date();
+                        const sessionId = await getSessionId();
+                        const rentData = await getRentData(
+                            sessionId,
+                            reserves.Place.dataValues,
+                            value.dataValues,
+                            reserves.dataValues.member
+                        );
 
-                    await executeRent(value.dataValues.id, sessionId, rentData, start);
+                        await executeRent(value.dataValues.id, sessionId, rentData, start);
+                    }
                 } catch (err) {
                     logger.reservationFail(
                         `ReserveId: ${reserves.id}, PlaceId: ${reserves.Place.id}, ReserveTimeId: ${value.dataValues.id}\n${err}`
                     );
                 }
             })
-        );
+        ).then(async () => {
+            const executed = await Reserve.findOne({
+                include: [{ model: ReserveTime }],
+                where: { id: reserveId },
+            });
+
+            if (executed.ReserveTimes.filter((value) => value.status !== 1).length === 0) {
+                await executed.update({ status: 1 });
+            } else {
+                await executed.update({ status: 2 });
+            }
+        });
 
         return { status: httpStatus.OK, message: "OK" };
     })

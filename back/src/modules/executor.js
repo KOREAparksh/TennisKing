@@ -1,33 +1,39 @@
 const { sequelize } = require("../models");
-const logger = require("./logger");
-
-const Sequelize = require("@sequelize/core");
-const Reserve = require("../models/reserve");
 const axios = require("axios");
+
+const Reserve = require("../models/reserve");
+
+const logger = require("./logger");
+const JWT = require("./jwt");
 
 (async function () {
     try {
         await sequelize.sync({ force: false });
         console.log("🚀 Database connect successfully.");
-
         console.log(`Executor starts at ${new Date().toLocaleString()}`);
-        const startTime = new Date();
-        const endTime = new Date().setMinutes(startTime.getMinutes() + 10);
-        const reserves = await Reserve.findAll({
-            where: {
-                open_time: {
-                    [Sequelize.Op.between]: [startTime, endTime],
-                },
-            },
-        });
 
+        const reserves = await Reserve.findAll();
         const results = await Promise.allSettled(
             reserves.map(async (value) => {
-                return axios.get(`${process.env.API_ENDPOINT}/execute/${value.id}`).data;
+                const now = new Date().getMinutes();
+                const open = new Date(value.open_time).getMinutes();
+
+                if (value.status !== 1 && open <= now && now <= open + 10) {
+                    const executeOptions = {
+                        method: "GET",
+                        headers: { cookie: `access=${JWT.accessSign()}; refresh=${JWT.refreshSign()};` },
+                        url: `${process.env.API_ENDPOINT}/execute/${value.id}`,
+                    };
+
+                    return axios(executeOptions).then((response) => response.data);
+                }
             })
         );
-        logger.cronLog(JSON.stringify(results));
+
+        if (results.length > 0) {
+            logger.cron(`${JSON.stringify(results)}\n`);
+        }
     } catch (err) {
-        logger.error(err);
+        logger.cron(`${err}\n`);
     }
 })();
