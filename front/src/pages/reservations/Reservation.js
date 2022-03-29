@@ -112,6 +112,11 @@ function Reservation()
 		}
 
 		alert(`${openDate} ${openTime}`);
+
+		//TODO
+		// 1. 함수 호출하여 데이터 보내기
+		// 2. respon받아서 띄우기
+		// 3. 메인화면 넘어가기
 		return false;
 	}
 

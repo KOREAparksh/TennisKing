@@ -4,13 +4,13 @@ import {useEffect, useState} from "react";
 import {getPlaces} from "../../api/api";
 
 function Main() {
-  //const [isLoading, setLoading] = useState(true);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  //const [isLoading, setLoading] = useState(false);
 
-  //useEffect(() => {
-  //  console.log("123");
-  //  getPlaces().then(() => setLoading(false)); // 토큰 확인용
-  //}, [])
+  useEffect(() => {
+    console.log("123");
+    getPlaces().then(() => setLoading(false)); // 토큰 확인용
+  }, [])
 
   return (<div id="Container">
       {isLoading ? (<h1>Loading...</h1>) : (<div>
