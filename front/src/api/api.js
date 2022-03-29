@@ -3,32 +3,31 @@ import axios from "axios";
 const client = axios.create({
   baseURL: `${process.env.REACT_APP_API_ENDPOINT}/api`,
   withCredentials: true,
-})
-
-client.interceptors.response.use(
-  res => res,
-  err => {
-  if (err.response.status === 401)
-    window.location.href = '/login';
-  return Promise.reject(err);
 });
 
-export const getPlaces = async () => {
-  try{
-    const response = await client.get('/places');
-    return response.data;
-  }catch (e){
-    console.log("places error");
-    console.log(e.status)
-    console.log(e)
+client.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (
+      err.response.status === 401 &&
+      err.response.data.message !== "Invalid Code"
+    )
+      window.location.href = "/login";
+    return Promise.reject(err);
   }
+);
+
+export const getPlaces = async () => {
+  const { data } = await client.get("/places");
+  return data;
 };
 
 export const login = async (code) => {
-  try{
-    const {data} = await client.post('/code', {code});
-    return data;
-  }catch (e) {
-    console.log(e.status);
-  }
-}
+  const { data } = await client.post("/code", { code });
+  return data;
+};
+
+export const getReserves = async () => {
+  const { data } = await client.get("/reserves");
+  return data;
+};
