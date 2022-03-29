@@ -15,19 +15,20 @@ const { getRentData, executeRent } = require("../controllers/rent");
 router.get(
     "/execute/:id",
     terminus(async (req, res) => {
-        try {
-            const reserveId = parseInt(req.params.id, 10);
-            const reserves = await Reserve.findOne({
-                include: [{ model: Place }, { model: ReserveTime }],
-                where: { id: reserveId },
-            });
+        const reserveId = parseInt(req.params.id, 10);
+        const reserves = await Reserve.findOne({
+            include: [{ model: Place }, { model: ReserveTime }],
+            where: { id: reserveId },
+        });
 
-            if (!reserves) throw new Error();
+        if (!reserves) {
+            throw new ApiError(httpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+        }
 
-            const start = new Date();
-
-            await Promise.all(
-                reserves.ReserveTimes.map(async (value) => {
+        Promise.allSettled(
+            reserves.ReserveTimes.map(async (value) => {
+                try {
+                    const start = new Date();
                     const sessionId = await getSessionId();
                     const rentData = await getRentData(
                         sessionId,
@@ -36,20 +37,16 @@ router.get(
                         reserves.dataValues.member
                     );
 
-                    executeRent(value.dataValues.id, sessionId, rentData);
-                })
-            );
+                    await executeRent(value.dataValues.id, sessionId, rentData, start);
+                } catch (err) {
+                    logger.reservationFail(
+                        `ReserveId: ${reserves.id}, PlaceId: ${reserves.Place.id}, ReserveTimeId: ${value.dataValues.id}\n${err}`
+                    );
+                }
+            })
+        );
 
-            const end = new Date();
-
-            logger.reservationTime(
-                `Total ${reserves.ReserveTimes.length} items were executed in ${(end - start) / 1000} seconds!!`
-            );
-
-            return { status: httpStatus.OK, message: "OK" };
-        } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "잘못된 요청입니다.");
-        }
+        return { status: httpStatus.OK, message: "OK" };
     })
 );
 

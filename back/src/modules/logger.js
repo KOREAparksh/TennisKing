@@ -131,6 +131,21 @@ const reservationTimeLog = winston.createLogger({
     ],
 });
 
+const cronLog = winston.createLogger({
+    level: "info",
+    format: formatOption,
+    transports: [
+        new winstonDaily({
+            level: "info",
+            datePattern: "YYYY-MM-DD",
+            dirname: "logs/cron",
+            filename: "%DATE%.cron.log",
+            maxFiles: "7d",
+            zippedArchive: true,
+        }),
+    ],
+});
+
 const logger = {
     error(message) {
         infoLog.error(message);
@@ -152,6 +167,10 @@ const logger = {
 
     reservationTime(message) {
         return reservationTimeLog.info(message);
+    },
+
+    cronLog(message) {
+        return cronLog.info(message);
     },
 
     http(message) {
