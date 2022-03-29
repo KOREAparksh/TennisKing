@@ -39,16 +39,6 @@ router.get(
                         );
 
                         await executeRent(value.dataValues.id, sessionId, rentData, start);
-
-                        const executed = await Reserve.findOne({
-                            include: [{ model: ReserveTime }],
-                            where: { id: reserveId },
-                        });
-                        if (executed.reserveTimes.filter((value) => value.status !== 1).length === 0) {
-                            await Reserve.update({ status: 1 }, { where: { id: reserveId } });
-                        } else {
-                            await Reserve.update({ status: 2 }, { where: { id: reserveId } });
-                        }
                     }
                 } catch (err) {
                     logger.reservationFail(
@@ -56,7 +46,18 @@ router.get(
                     );
                 }
             })
-        );
+        ).then(async () => {
+            const executed = await Reserve.findOne({
+                include: [{ model: ReserveTime }],
+                where: { id: reserveId },
+            });
+
+            if (executed.ReserveTimes.filter((value) => value.status !== 1).length === 0) {
+                await executed.update({ status: 1 });
+            } else {
+                await executed.update({ status: 2 });
+            }
+        });
 
         return { status: httpStatus.OK, message: "OK" };
     })
