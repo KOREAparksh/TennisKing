@@ -10,6 +10,7 @@ const axios = require("axios");
     await sequelize.sync({force: false});
     console.log("🚀 Database connect successfully.");
 
+    console.log(`Executor starts at ${(new Date()).toLocaleString()}`);
     const startTime = new Date();
     const endTime = (new Date()).setMinutes(startTime.getMinutes() + 10)
     const reserves = await Reserve.findAll({
