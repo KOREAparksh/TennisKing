@@ -21,7 +21,7 @@ function Reservation()
 	const [min, setMin] = useState("2022-02-25");
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
-	const [reserveDates, setReserveDates] = useState([new Date()]);
+	const [reserveDates, setReserveDates] = useState([new Date(0,0)]);
 
 	const[person, setPerson] = useState(0); // 인원수
 
@@ -34,7 +34,6 @@ function Reservation()
 
 	const onClickReserveDate = (e, index) =>
 	{
-		//console.log(index);
 		const dates = [...reserveDates]
 		dates[index] = new Date(e.target.value);
 		setReserveDates(dates);
@@ -43,9 +42,18 @@ function Reservation()
 	const addDate = (e) => {
 		e.preventDefault()
 		const new_dates = [...reserveDates]
-		new_dates.push(new Date())
+		new_dates.push(new Date(0, 0))
+		console.log(new_dates);
 		setReserveDates(new_dates)
 		// setReserveDates([new Date(), ...reserveDates])
+	}
+
+	const deleteDate = (e) =>{
+		e.preventDefault()
+		const new_dates = [...reserveDates]
+		if (new_dates.length > 1)
+			new_dates.pop();
+		setReserveDates(new_dates);
 	}
 
 	const onSubmit = () => {
@@ -60,12 +68,32 @@ function Reservation()
 			return false;
 		}*/
 
-		//console.log(reserveDates)
-
 		if(person <= 0)
 		{
 			alert('인원수를 바르게 적어주세요')
 			return false;
+		}
+
+
+		const dates = [...reserveDates]
+		const len = dates.length;
+		//console.log(len);
+		//console.log('이건' + dates[0].getFullYear())
+
+
+		if(len === 1 && dates[0].getFullYear() === 1900)
+		{
+			alert('예약할 날짜를 설정하세요')
+			return false;
+		}
+
+		for(let i = 0; i <len; i++)
+		{
+			if(dates[i].getFullYear() === 1900)
+			{
+				alert('예약할 날짜를 모두 설정하세요')
+				return false;
+			}
 		}
 
 		if(Check1 === false && Check2 === false && Check3 === false && Check4 === false && Check5 === false && Check6 === false && Check7 === false && Check7 === false && Check8 === false)
@@ -269,7 +297,11 @@ function Reservation()
 						</div>
 						<div>
 							<button onClick={addDate}>
-								날짜 추가
+								추가
+							</button>
+							<span >  </span>
+							<button onClick={deleteDate}>
+								삭제
 							</button>
 						</div>
 					</div>
@@ -332,7 +364,7 @@ function Reservation()
 						</div>
 					</div>
 
-					<button type="submit" onClick={onSubmit}>예약</button>
+					<button type="button" onClick={onSubmit}>예약</button>
 
 				</fieldset>
 			</form>
