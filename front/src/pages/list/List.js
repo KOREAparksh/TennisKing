@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import ListTile from "./ListTile";
 import { getPlaces, getReserves } from "../../api/api";
-
-function parseDate(dateString) {
-  const regex = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/;
-  const [, year, month, day, hour, minute, second] = regex.exec(dateString);
-  return new Date(year, month, day, hour, minute, second,);
-}
+import { parseDate } from "../../util/date";
 
 function List() {
   const [reserves, setReserves] = useState([]);
