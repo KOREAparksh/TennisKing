@@ -31,3 +31,7 @@ export const getReserves = async () => {
   const { data } = await client.get("/reserves");
   return data;
 };
+
+export const deleteReserve = async (id) => {
+  await client.delete(`/reserves/${id}`);
+}

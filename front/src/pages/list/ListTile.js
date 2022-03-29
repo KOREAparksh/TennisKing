@@ -1,14 +1,9 @@
 import {useState} from "react";
+import { useNavigate } from "react-router-dom";
+import { deleteReserve } from "../../api/api";
 import './ListTile.css'
 
 function ListTile({ id, openTime, place, reserveTimes }) {
-  const [stateList, setStateList] = useState([0, 2]);
-  const [facility, setFacility] = useState("다산행정복지시설");
-  const [facilityDetail1, setFacilityDetail1] = useState("체육공원2호 체육시설");
-  const [facilityDetail2, setFacilityDetail2] = useState("테니스장 코트2");
-  const [bookDatesDatas, setBookDatesDatas] = useState(["2022-04-02", "2022-04-03"]);
-  const [bookTimesDatas, setBookTimesDatas] = useState([0, 1, 5, 6, 7]);
-
   const stateStringList = ["대기 중", "취소", "완료"];
   const stateColor = ["Green", "Red", "Blue"];
   const bookTimeMapper = new Map([
@@ -21,6 +16,18 @@ function ListTile({ id, openTime, place, reserveTimes }) {
     [18, "7회 18:00 ~ 20:00"],
     [20, "8회 20:00 ~ 22:00"],
   ]); 
+  const [stateList, setStateList] = useState([0, 2]);
+  const navigate = useNavigate();
+
+  const onClickModify = () => {
+    navigate(`/modify/${id}`);
+  };
+
+  const onClickDelete = async () => {
+    alert('정말 해당 예약을 삭제하시겠습니까?');
+    await deleteReserve(id);
+    navigate(0);
+  };
 
   return (
     <div id="Container">
@@ -57,9 +64,9 @@ function ListTile({ id, openTime, place, reserveTimes }) {
         </div>
         <div className="Margin25"/>
         <div id="ButtonDiv">
-          <button className="Button">수정</button>
+          <button className="Button" onClick={onClickModify}>수정</button>
           <div className="Margin10"></div>
-          <button className="Button">삭제</button>
+          <button className="Button" onClick={onClickDelete}>삭제</button>
           <div className="Margin25"></div>
         </div>
       </div>
