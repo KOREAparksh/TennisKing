@@ -32,6 +32,22 @@ function Reservation()
 		setIsStartDateChecked(true)
 	}
 
+	const onClickReserveDate = (e, index) =>
+	{
+		//console.log(index);
+		const dates = [...reserveDates]
+		dates[index] = new Date(e.target.value);
+		setReserveDates(dates);
+	}
+
+	const addDate = (e) => {
+		e.preventDefault()
+		const new_dates = [...reserveDates]
+		new_dates.push(new Date())
+		setReserveDates(new_dates)
+		// setReserveDates([new Date(), ...reserveDates])
+	}
+
 	const onSubmit = () => {
 
 		if (!openDate || !openTime) {
@@ -44,7 +60,7 @@ function Reservation()
 			return false;
 		}*/
 
-		console.log(reserveDates)
+		//console.log(reserveDates)
 
 		if(person <= 0)
 		{
@@ -62,10 +78,6 @@ function Reservation()
 		return false;
 	}
 
-	const addDate = (e) => {
-		e.preventDefault()
-		setReserveDates([new Date(), ...reserveDates])
-	}
 
 	const [allCheck, setAllCheck] = useState(false);
 	const [Check1, setCheck1] = useState(false);
@@ -248,9 +260,9 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div>
-							{reserveDates.map((date) => (
+							{reserveDates.map((date, index) => (
 								<div id="InputDate">
-									<input type="date" className='InputTag' min={min} required disabled={!isStartDateChecked}>
+									<input type="date" className='InputTag' onChange={(e) => onClickReserveDate(e, index)} min={min} required disabled={!isStartDateChecked}>
 									</input>
 								</div>
 							))}
