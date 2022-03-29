@@ -1,8 +1,10 @@
 const { sequelize } = require("../models");
-const logger = require("./logger");
+const axios = require("axios");
 
 const Reserve = require("../models/reserve");
-const axios = require("axios");
+
+const logger = require("./logger");
+const JWT = require("./jwt");
 
 (async function () {
     try {
@@ -15,8 +17,15 @@ const axios = require("axios");
             reserves.map(async (value) => {
                 const now = new Date().getMinutes();
                 const open = new Date(value.open_time).getMinutes();
+
                 if (value.status !== 1 && open <= now && now <= open + 10) {
-                    return axios.get(`${process.env.API_ENDPOINT}/execute/${value.id}`).then((response) => response.data);
+                    const executeOptions = {
+                        method: "GET",
+                        headers: { cookie: JWT.accessSign(), cookie: JWT.refreshSign() },
+                        url: `${process.env.API_ENDPOINT}/execute/${value.id}`,
+                    };
+
+                    return axios(executeOptions).then((response) => response.data);
                 }
             })
         );
