@@ -41,7 +41,7 @@ module.exports = class Reserve extends Sequelize.Model {
     }
 
     static associate(db) {
-        db.Reserve.hasMany(db.ReserveTime, {
+        Reserve.ReserveTime = db.Reserve.hasMany(db.ReserveTime, {
             foreignKey: "reserve_id",
             sourceKey: "id",
         });
