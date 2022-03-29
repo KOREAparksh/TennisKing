@@ -21,7 +21,7 @@ const JWT = require("./jwt");
                 if (value.status !== 1 && open <= now && now <= open + 10) {
                     const executeOptions = {
                         method: "GET",
-                        headers: { cookie: JWT.accessSign(), cookie: JWT.refreshSign() },
+                        headers: { cookie: `access=${JWT.accessSign()}; refresh=${JWT.refreshSign()};` },
                         url: `${process.env.API_ENDPOINT}/execute/${value.id}`,
                     };
 
