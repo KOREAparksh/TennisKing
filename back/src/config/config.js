@@ -8,7 +8,7 @@ module.exports = {
         options: {
             dialect: process.env.DATABASE_RDB,
             host: "127.0.0.1",
-            port: 3306,
+            port: process.env.DATABASE_PORT,
             timezone: "+09:00",
             logging: false,
         },
@@ -31,7 +31,7 @@ module.exports = {
         database: process.env.DATABASE_NAME,
         options: {
             dialect: process.env.DATABASE_RDB,
-            host: process.env.DATABASE_HOST,
+            host: "127.0.0.1",
             port: process.env.DATABASE_PORT,
             timezone: "+09:00",
         },
