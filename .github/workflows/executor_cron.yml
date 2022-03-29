@@ -3,9 +3,21 @@
 
 name: 'executor-cron'
 
-on:
+on:   
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Person to greet"
+        required: true
+        default: "bossm0n5t3r"
+      home:
+        description: "location"
+        required: false
+        default: "The Octoverse"
+  repository_dispatch:
+    types: [build-event]
   schedule:
-      - cron: '*/5 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   build:
@@ -22,6 +34,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-      working-directory: ./back
     - run: npm install 
+      working-directory: ./back
     - run: node ./src/modules/executor.js 
+      working-directory: ./back
