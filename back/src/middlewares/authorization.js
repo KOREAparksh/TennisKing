@@ -7,7 +7,7 @@ const authorization = (req, res, next) => {
     const refresh = req.cookies.refresh;
 
     if (!access || !refresh) {
-        next(new ApiError(httpStatus.BAD_REQUEST, "잘못된 요청입니다."));
+        next(new ApiError(httpStatus.UNAUTHORIZED, "UnAuthorized"));
     }
 
     const accessVerify = JWT.accessVerify(access, refresh);

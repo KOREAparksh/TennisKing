@@ -20,7 +20,7 @@ router.post(
 
             return { status: httpStatus.OK, message: "OK" };
         } else {
-            throw new ApiError(httpStatus.UNAUTHORIZED, "UnAuthorized");
+            throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid Code");
         }
     })
 );
