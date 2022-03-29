@@ -9,8 +9,7 @@ const ReserveTime = require("../models/reserve_time");
 const terminus = require("../middlewares/terminus");
 const ApiError = require("../modules/api.error");
 const httpStatus = require("http-status");
-const { getReserveData, toResponse} = require("../controllers/reserve");
-const { format } = require("express/lib/response");
+const { getReserveData, toResponse } = require("../controllers/reserve");
 
 router.post(
     "/",
@@ -91,6 +90,10 @@ router.patch(
     terminus(async (req, res) => {
         try {
             const reserve = await Reserve.findByPk(parseInt(req.params.id, 10))
+            const today = new Date();
+            if (today > new Date(reserve.open_time)) {
+                throw "Too Late To Change It"
+            }
             const reserveData = await getReserveData(req);
             await Promise.all([
                 ReserveTime.destroy({
@@ -126,7 +129,7 @@ router.delete(
                 if (reserve == null)
                     throw "Absent Reserve";
                 const today = new Date();
-                if (today > reserve.openTime) {
+                if (today > new Date(reserve.open_time)) {
                     throw "Too Late To Delete It"
                 }
                 reserve.destroy({
