@@ -1,8 +1,11 @@
 import {useState, useEffect} from "react";
+import { getPlaces } from "../../api/api";
 
 import './Reservation.css'
 function Reservation()
 {
+
+
 	const getToday = () =>{
 		const date = new Date();
 		const y = date.getFullYear();
@@ -16,14 +19,20 @@ function Reservation()
 		return y+"-"+m+"-"+d;
 	}
 
-	const[isStartDateChecked, setIsStartDateChecked] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const [isStartDateChecked, setIsStartDateChecked] = useState(false);
 	const today = getToday();
 	const [min, setMin] = useState("2022-02-25");
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
 	const [reserveDates, setReserveDates] = useState([new Date(0,0)]);
+	const [person, setPerson] = useState(0); // 인원수
 
-	const[person, setPerson] = useState(0); // 인원수
+
+	useEffect(() => {
+		console.log("123");
+		getPlaces().then(() => setLoading(false)); // 토큰 확인용
+	}, [])
 
 	const getSetDay = (e) => {
 		const date = document.getElementById('setStartDate').value;
@@ -208,6 +217,7 @@ function Reservation()
 
 
 	return(
+		(loading)?<div>Loading...</div>:
 		<div className='Container'>
 			<form className='Form'>
 				<fieldset>
