@@ -5,30 +5,24 @@ import {getPlaces} from "../../api/api";
 
 function Main() {
   const [isLoading, setLoading] = useState(true);
+  //const [isLoading, setLoading] = useState(false);
+
   useEffect(() => {
     console.log("123");
     getPlaces().then(() => setLoading(false)); // 토큰 확인용
   }, [])
 
-  const onTapNewButton = () => {
-
-  }
-
-  const onTapBookListButton = () => {
-
-  }
-
   return (<div id="Container">
       {isLoading ? (<h1>Loading...</h1>) : (<div>
           <Link to="/reservation">
             <div>
-              <button className="Button" onClick={onTapNewButton}>새 예약</button>
+              <button className="Button" >새 예약</button>
             </div>
           </Link>
           <div className="Margin50"></div>
           <Link to="/list">
             <div>
-              <button className="Button" onClick={(onTapBookListButton)}>예약 조회</button>
+              <button className="Button">예약 조회</button>
             </div>
           </Link>
           <div className="Margin50"></div>
