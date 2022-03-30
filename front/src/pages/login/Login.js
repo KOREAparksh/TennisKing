@@ -17,7 +17,7 @@ function Login(props) {
     if (text.length <= 0) return false;
     try {
       await api.login(text);
-      //navigate("/");
+      navigate("/");
     } catch (err) {
       if (err.response.data.message === "Invalid Code") {
         setIsValid(false);
