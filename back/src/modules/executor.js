@@ -15,10 +15,10 @@ const JWT = require("./jwt");
         const reserves = await Reserve.findAll();
         const results = await Promise.allSettled(
             reserves.map(async (value) => {
-                const now = new Date().getMinutes();
-                const open = new Date(value.open_time).getMinutes();
+                const now = new Date();
+                const open = new Date(value.open_time);
 
-                if (value.status !== 1 && open <= now && now <= open + 10) {
+                if (value.status !== 1 && open <= now && now <= new Date(Date.parse(open) + 10 * 60 * 1000)) {
                     const executeOptions = {
                         method: "GET",
                         headers: { cookie: `access=${JWT.accessSign()}; refresh=${JWT.refreshSign()};` },
