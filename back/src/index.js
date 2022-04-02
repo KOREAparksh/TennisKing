@@ -4,6 +4,7 @@ const router = require("./routers");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+require("dotenv").config();
 
 const { notFound, errorConverter, errorHandler } = require("./middlewares/error");
 const logger = require("./modules/logger");
@@ -12,7 +13,7 @@ const port = process.env.PORT || 5000;
 const app = express();
 
 const corsOptions = {
-    origin: ["http://localhost:3000", "http://20.41.103.72"],
+    origin: [process.env.LOCAL_ENDPOINT, process.env.CLIENT_ENDPOINT],
     credentials: true,
     method: ["POST", "GET", "PUT", "PATCH", "DELETE"],
 };
