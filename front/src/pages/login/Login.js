@@ -44,7 +44,7 @@ function Login(props) {
 			코드가 정확하지 않습니다.
 		  </div>
 		  <div>
-			<button type="button" class="btn btn-default" onClick={onSubmit}>로그인</button>
+			<button type="button" className="btn btn-default" onClick={onSubmit}>로그인</button>
 		</div>
 		</form>
 	</div>
