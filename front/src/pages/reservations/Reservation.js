@@ -376,11 +376,11 @@ function Reservation()
 							))}
 						</div>
 						<div>
-							<button onClick={addDate}>
+							<button id="btn" onClick={addDate}>
 								추가
 							</button>
 							<span >  </span>
-							<button onClick={deleteDate}>
+							<button id="btn" onClick={deleteDate}>
 								삭제
 							</button>
 						</div>
@@ -446,7 +446,7 @@ function Reservation()
 						</div>
 					</div>
 					<Link to="/" >
-						<button type="button" onClick={onSubmit}>예약</button>
+						<button type="button" id="btn" onClick={onSubmit}>예약</button>
 					</Link>
 
 

@@ -124,3 +124,41 @@ button {
   height: 30px;
   margin-top: 20px;
 }
+
+@media only screen and (max-width: 768px) {
+
+  legend
+  {
+    margin: 10px 10px 50px 10px; 
+  }
+  .Form
+  {
+    width: 90%;
+  }
+  .Title{
+    text-align: left;
+    font-size: 14px;
+  }
+  .Input{
+    font-size: 11px;
+  }
+  .TitleTag{
+    font-size: 14px;
+  }
+  #InputDate{
+    font-size: 12px;
+    padding:5px;
+  }
+  button {
+    width: 25%;
+    height: 25px;
+    font-size:19px; 
+  }
+  #btn{
+    font-size: 13px;
+  }
+  .TableDiv{
+    font-size:13px;
+  }
+
+}
