@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
-import { getPlaces } from "../../api/api";
-
+import { getPlaces, postReserves } from "../../api/api";
+import {Link} from "react-router-dom";
 import './Reservation.css'
 function Reservation()
 {
@@ -27,33 +27,65 @@ function Reservation()
 	const [loading, setLoading] = useState(true);
 	const [isStartDateChecked, setIsStartDateChecked] = useState(false);
 	const [min, setMin] = useState("2022-02-25");
+	const [placeList, setPlaceList] = useState([]);
 	const [facility, setFacility] = useState([]);
 	const [facility_detail1, setFacilityDetail1] = useState([]);
 	const [facility_detail2, setFacilityDetail2] = useState([]);
+	const [place_id, setPlaceId] = useState(null);
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
 	const [reserveDates, setReserveDates] = useState([new Date(0,0)]);
 	const [person, setPerson] = useState(0); // 인원수
 
 
-	useEffect(() => {
-		getPlaces().then( function (data) {
-			data.map(function (data){
-				facility.push(data["com_name"]);
-				const temp = new Set(facility);
-				setFacility([...temp]);
-
-				facility_detail1.push(data["part_name"])
-				const temp1 = new Set(facility_detail1);
-				setFacilityDetail1([...temp1]);
-
-				facility_detail2.push(data["place_name"])
-				const temp2 = new Set(facility_detail2);
-				setFacilityDetail2([...temp2]);
+	useEffect(async () => {
+		await getPlaces().then(
+			function (data){
+				data.push({
+					"id": 111,
+					"com_name": "개포 근린공원",
+					"part_name": "서쪽공원",
+					"place_name": "철봉1",
+					"comcd": "NYJ06",
+					"partcd": "07",
+					"placecd": "103",
+					"facility": 99,
+				  },
+				  {
+					"id": 122,
+					"com_name": "개포 근린공원",
+					"part_name": "동쪽공원",
+					"place_name": "철봉2",
+					"comcd": "NYJ046",
+					"partcd": "073",
+					"placecd": "1023",
+					"facility": 919,
+				  },{
+					"id": 1,
+					"com_name": "개포 근린공원",
+					"part_name": "동쪽공원",
+					"place_name": "철봉1",
+					"comcd": "NYJ1106",
+					"partcd": "0117",
+					"placecd": "11103",
+					"facility": 199,
+				  }) // testcase
+				setPlaceList(data);
+				data.map(function (data, index){
+					facility.push(data["com_name"]);
+					const temp = new Set(facility);
+					setFacility([...temp]);
+					setLoading(false);
+				});
+				const value = facility_default;
+				const arr = data.filter(data => data.com_name === value.toString())
+				const part_name_arr = arr.map(data => data.part_name);
+				const temp = new Set(part_name_arr)
+				setFacilityDetail1([...temp]);
 				setLoading(false);
-			})
-		});
-	}, [])
+			}
+		);
+	}, [1])
 
 	const getSetDay = (e) => {
 		const date = document.getElementById('setStartDate').value;
@@ -86,56 +118,74 @@ function Reservation()
 		setReserveDates(new_dates);
 	}
 
-	const onSubmit = () => {
+	const onChangeFacility = (e) =>{
+		const value = e.target.value;
+		const arr = placeList.filter(data => data.com_name === value.toString())
+		const part_name_arr = arr.map(data => data.part_name);
+		const temp = new Set(part_name_arr)
+		setFacilityDetail1([...temp]);
+	}
+
+	const onChangeFacilityDetail1 = (e) =>{
+		const value = e.target.value;
+		const arr = placeList.filter(data => data.part_name === value.toString())
+		const part_name_arr = arr.map(data => data.place_name);
+		const temp = new Set(part_name_arr)
+		setFacilityDetail2([...temp]);
+	}
+
+	const onSubmit = (event) => {
+
+		console.log(new Date(openDate))
+
+		console.log(new Date(openDate))
 
 		if (!openDate || !openTime) {
 			alert('프로그램 시작 시간을 확인하세요');
+			event.preventDefault();
 			return false;
 		}
+		//if()
+		//{
 
-		/*if (document.getElementById('facility').value === '') { //n개중 택이기 때문에 항상 true
-			alert('시설을 설정해주세요');
-			return false;
-		}*/
-
+		//}
 		if(person <= 0)
 		{
 			alert('인원수를 바르게 적어주세요')
+			event.preventDefault();
 			return false;
 		}
-
-
 		const dates = [...reserveDates]
 		const len = dates.length;
-
-
 		if(len === 1 && dates[0].getFullYear() === 1900)
 		{
 			alert('예약할 날짜를 설정하세요')
+			event.preventDefault();
 			return false;
 		}
-
 		for(let i = 0; i <len; i++)
 		{
 			if(dates[i].getFullYear() === 1900)
 			{
 				alert('예약할 날짜를 모두 설정하세요')
+				event.preventDefault();
 				return false;
 			}
 		}
-
 		if(Check1 === false && Check2 === false && Check3 === false && Check4 === false && Check5 === false && Check6 === false && Check7 === false && Check7 === false && Check8 === false)
 		{
 			alert('회차를 선택하세요.')
+			event.preventDefault();
 			return false;
 		}
 
-		alert(`${openDate} ${openTime}`);
+		//데이터 전부 채움
+		//postReserves(
+		//	openDate
+		//).then();
+		alert(openDate)
 
-		//TODO
-		// 1. 함수 호출하여 데이터 보내기
-		// 2. respon받아서 띄우기
-		// 3. 메인화면 넘어가기
+		event.preventDefault(); //delete
 		return false;
 	}
 
@@ -239,12 +289,6 @@ function Reservation()
 		}
 	  }, [Check1,Check2,Check3,Check4,Check5,Check6,Check7,Check8])
 
-	console.log("@@@111")
-	console.log(facility)
-	console.log(facility_detail1)
-	console.log(facility_detail2)
-	console.log("@@@222")
-
 	return(
 		(loading)?<div>Loading...</div>:
 		<div className='Container'>
@@ -253,9 +297,9 @@ function Reservation()
 					<legend>새 예약 입력 form</legend>
 					<div className='Row'>
 						<div className='Title'>
-							<formrowtitle className='TitleTag'>
+							<div className='TitleTag FormRowTitle'>
 								프로그램 시작 시각
-							</formrowtitle>
+							</div>
 						</div>
 						<div className='Input'>
 							<input id="setStartDate" min={today} type="date" className='InputTag InputTagText' onChange={getSetDay} required>
@@ -266,51 +310,51 @@ function Reservation()
 					</div>
 					<div className='Row'>
 						<div className='Title'>
-							<formrowtitle className='TitleTag'>
+							<div className='TitleTag FormRowTitle'>
 								시설
-							</formrowtitle>
+							</div>
 						</div>
 						<div className='Input'>
-							<select id="facility" name="facility" className='Select' required defaultValue={facility_default[0]}>
-								{facility.map((data) => (
-									<option key={data.id} value={data}>{data}</option>
+							<select id="facility" name="facility" className='Select' required  onChange={onChangeFacility}>
+								{facility.map((data, index) => (
+									<option key={index} value={data}>{data}</option>
 								))}
 							</select>
 						</div>
 					</div>
 					<div className='Row'>
 						<div className='Title'>
-							<formrowtitle className='TitleTag'>
+							<div className='TitleTag FormRowTitle'>
 								시설상세1
-							</formrowtitle>
+							</div>
 						</div>
 						<div className='Input'>
-							<select id="facility-detail1" name="facility-detail1" className='Select' required defaultValue={facility1_default[0]}>
-								{facility_detail1.map((data) => (
-									<option key={data.id} value={data}>{data}</option>
+							<select id="facility-detail1" name="facility-detail1" className='Select' required onChange={onChangeFacilityDetail1}>
+								{facility_detail1.map((data, index) => (
+									<option key={index} value={data}>{data}</option>
 								))}
 							</select>
 						</div>
 					</div>
 					<div className='Row'>
 						<div className='Title'>
-							<formrowtitle className='TitleTag'>
+							<div className='TitleTag FormRowTitle'>
 								시설상세2
-							</formrowtitle>
+							</div>
 						</div>
 						<div className='Input'>
-							<select id="facility-detail2" name="facility-detail2" className='Select' required defaultValue={facility2_default[0]}>
-								{facility_detail2.map((data) => (
-									<option key={data.id} value={data}>{data}</option>
+							<select id="facility-detail2" name="facility-detail2" className='Select' required >
+								{facility_detail2.map((data, index) => (
+									<option key={index} value={data.toString()}>{data}</option>
 								))}
 							</select>
 						</div>
 					</div>
 					<div className='Row'>
 						<div className='Title'>
-							<formrowtitle className='TitleTag'>
+							<div className='TitleTag FormRowTitle'>
 								인원 수
-							</formrowtitle>
+							</div>
 						</div>
 						<div className='Input'>
 							<input type="number" className='InputTag' onChange={(e) =>{setPerson(e.target.value)}} required>
@@ -319,9 +363,9 @@ function Reservation()
 					</div>
 					<div id='BookDate'>
 						<div >
-							<formrowtitle>
+							<div className='TitleTag FormRowTitle'>
 								예약할 날짜 설정
-							</formrowtitle>
+							</div>
 						</div>
 						<div>
 							{reserveDates.map((date, index) => (
@@ -343,44 +387,46 @@ function Reservation()
 					</div>
 
 					<div id='BookTime'>
-						<formrowtitle>
+						<div className='TitleTag FormRowTitle'>
 							회차옵션
-						</formrowtitle>
+						</div>
 						<div className="Error">위 선택한 모든 날짜에 옵션이 적용됩니다.</div>
 						<div className='TableDiv'>
 							<table border="1">
-								<tr>
-									<td>
-										<input type="checkbox" id='first' name='select_time' checked={Check1} onChange={BtnEvent1}></input>1회: 06:00 ~ 08:00
-									</td>
-									<td>
-										<input type="checkbox" id='fifth' name='select_time' checked={Check5} onChange={BtnEvent5}></input>5회: 14:00 ~ 16:00
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" id='second' name='select_time' checked={Check2} onChange={BtnEvent2}></input>2회: 08:00 ~ 10:00
-									</td>
-									<td>
-										<input type="checkbox" id='sixth' name='select_time' checked={Check6} onChange={BtnEvent6}></input>6회: 16:00 ~ 18:00
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" id='thrid' name='select_time' checked={Check3} onChange={BtnEvent3}></input>3회: 10:00 ~ 12:00
-									</td>
-									<td>
-										<input type="checkbox" id='seven' name='select_time' checked={Check7} onChange={BtnEvent7}></input>7회: 18:00 ~ 20:00
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" id='four' name='select_time' checked={Check4} onChange={BtnEvent4}></input>4회: 12:00 ~ 14:00
-									</td>
-									<td>
-										<input type="checkbox" id='eight' name='select_time' checked={Check8} onChange={BtnEvent8}></input>8회: 20:00 ~ 22:00
-									</td>
-								</tr>
+								<tbody>
+									<tr>
+										<td>
+											<input type="checkbox" id='first' name='select_time' checked={Check1} onChange={BtnEvent1}></input>1회: 06:00 ~ 08:00
+										</td>
+										<td>
+											<input type="checkbox" id='fifth' name='select_time' checked={Check5} onChange={BtnEvent5}></input>5회: 14:00 ~ 16:00
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id='second' name='select_time' checked={Check2} onChange={BtnEvent2}></input>2회: 08:00 ~ 10:00
+										</td>
+										<td>
+											<input type="checkbox" id='sixth' name='select_time' checked={Check6} onChange={BtnEvent6}></input>6회: 16:00 ~ 18:00
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id='thrid' name='select_time' checked={Check3} onChange={BtnEvent3}></input>3회: 10:00 ~ 12:00
+										</td>
+										<td>
+											<input type="checkbox" id='seven' name='select_time' checked={Check7} onChange={BtnEvent7}></input>7회: 18:00 ~ 20:00
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id='four' name='select_time' checked={Check4} onChange={BtnEvent4}></input>4회: 12:00 ~ 14:00
+										</td>
+										<td>
+											<input type="checkbox" id='eight' name='select_time' checked={Check8} onChange={BtnEvent8}></input>8회: 20:00 ~ 22:00
+										</td>
+									</tr>
+								</tbody>
 							</table>
 							<input type="checkbox" id='all' name='all' checked={allCheck} onChange={allBtnEvent}></input>전체선택
 						</div>
@@ -389,9 +435,9 @@ function Reservation()
 
 					<div className='Row'>
 						<div className='Title'>
-							<formrowtitle className='TitleTag'>
+							<div className='TitleTag FormRowTitle'>
 								부가옵션
-							</formrowtitle>
+							</div>
 						</div>
 						<div className='Input' >
 							<div id='OptionDiv'>
@@ -399,8 +445,10 @@ function Reservation()
 							</div>
 						</div>
 					</div>
+					<Link to="/" >
+						<button type="button" onClick={onSubmit}>예약</button>
+					</Link>
 
-					<button type="button" onClick={onSubmit}>예약</button>
 
 				</fieldset>
 			</form>
