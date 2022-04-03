@@ -22,7 +22,6 @@ function Reservation()
 	const today = getToday();
 	const facility_default = "다산 행정복지센터"
 	const facility1_default = "체육공원2호 체육시설"
-	const facility2_default = "테니스코트2"
 
 	const [loading, setLoading] = useState(true);
 	const [isStartDateChecked, setIsStartDateChecked] = useState(false);
@@ -31,11 +30,11 @@ function Reservation()
 	const [facility, setFacility] = useState([]);
 	const [facility_detail1, setFacilityDetail1] = useState([]);
 	const [facility_detail2, setFacilityDetail2] = useState([]);
-	const [place_id, setPlaceId] = useState(null);
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
 	const [reserveDates, setReserveDates] = useState([new Date(0,0)]);
 	const [person, setPerson] = useState(0); // 인원수
+	const [option1, setOption1] = useState(false)
 
 
 	useEffect(async () => {
@@ -77,12 +76,24 @@ function Reservation()
 					setFacility([...temp]);
 					setLoading(false);
 				});
-				const value = facility_default;
-				const arr = data.filter(data => data.com_name === value.toString())
-				const part_name_arr = arr.map(data => data.part_name);
-				const temp = new Set(part_name_arr)
-				setFacilityDetail1([...temp]);
+				const value1 = facility_default;
+				const arr1 = data.filter(data => data.com_name === value1.toString())
+				const part_name_arr1 = arr1.map(data => data.part_name);
+				const temp1 = new Set(part_name_arr1)
+				setFacilityDetail1([...temp1]);
+
+				const value2 = facility1_default;
+				const arr2 = data.filter(data => data.part_name === value2.toString())
+				const part_name_arr2 = arr2.map(data => data.place_name);
+				const temp2 = new Set(part_name_arr2)
+				setFacilityDetail2([...temp2]);
+
+				console.log(value2)
+				console.log(arr2)
+				console.log(part_name_arr2)
+
 				setLoading(false);
+
 			}
 		);
 	}, [1])
@@ -124,6 +135,13 @@ function Reservation()
 		const part_name_arr = arr.map(data => data.part_name);
 		const temp = new Set(part_name_arr)
 		setFacilityDetail1([...temp]);
+		const value2 = part_name_arr[0] ?? "";
+		console.log(value2)
+		const arr2 = placeList.filter(data => data.part_name === value2.toString())
+		const part_name_arr2 = arr2.map(data => data.place_name);
+		const temp2 = new Set(part_name_arr2)
+		setFacilityDetail2([...temp2]);
+
 	}
 
 	const onChangeFacilityDetail1 = (e) =>{
@@ -134,12 +152,15 @@ function Reservation()
 		setFacilityDetail2([...temp]);
 	}
 
+	const onClickOption1 = (e) => {
+		console.log("#")
+		if (option1 === false)
+			setOption1(true)
+		else
+			setOption1(false)
+	}
+
 	const onSubmit = (event) => {
-
-		console.log(new Date(openDate))
-
-		console.log(new Date(openDate))
-
 		if (!openDate || !openTime) {
 			alert('프로그램 시작 시간을 확인하세요');
 			event.preventDefault();
@@ -179,12 +200,56 @@ function Reservation()
 			return false;
 		}
 
-		//데이터 전부 채움
-		//postReserves(
-		//	openDate
-		//).then();
-		alert(openDate)
 
+		console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+		const open_date = new Date(openDate + " " + openTime)
+		console.log(openDate)
+		console.log(openTime)
+		console.log(open_date)
+		const com_name = document.getElementById('facility').value
+		const part_name = document.getElementById('facility-detail1').value
+		const place_name = document.getElementById('facility-detail2').value
+		const place_id = placeList.filter((data) => {
+			if (data.com_name === com_name && data.part_name === part_name
+						&& data.place_name === place_name)
+					return true;
+			return false;
+		})[0].facility
+		console.log(place_id)
+		console.log(person)
+		const reserve_times = []
+		const hour_mili = 60 * 60 * 1000;
+		reserveDates.map(function (data, index) {
+			console.log("123")
+			console.log(data)
+			console.log(new Date(Date.parse(data) ))
+			if (Check1 == true)
+				reserve_times.push(new Date(data + " 06:00"))
+		})
+		console.log(reserve_times)
+		console.log(reserveDates)
+		console.log(option1)
+		console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+		try{
+		postReserves(
+			new Date(openDate + openTime),
+			place_id,
+			person,
+			reserveDates,
+			option1,
+		).then(function(data) {
+			if (data.status === 200){
+				alert("예약 등록이 완료되었습니다")
+				return true;
+			}
+			else {
+				alert("예약 등록을 실패하였습니다. 관리자에게 문의하세요")
+			}
+		});
+		}catch (e) {
+
+		}
 		event.preventDefault(); //delete
 		return false;
 	}
@@ -441,7 +506,7 @@ function Reservation()
 						</div>
 						<div className='Input' >
 							<div id='OptionDiv'>
-								<input type="checkbox" id='option1' name='option1'/>조명
+								<input type="checkbox" id='option1' name='option1' value={option1} onClick={onClickOption1}/>조명
 							</div>
 						</div>
 					</div>
