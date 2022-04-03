@@ -19,8 +19,6 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
   function (res) {
-    console.log(res.headers);
-    console.log(res.headers['refresh']);
     setCookie('access', res.headers['access'], ["httpOnly", "sameSite"]);
     setCookie('refresh', res.headers['refresh'], ["httpOnly", "sameSite"]);
     return res;

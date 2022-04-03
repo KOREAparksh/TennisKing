@@ -85,7 +85,7 @@ formrowtitle {
   font-weight: bold;
 }
 
-#BookTime contents {
+#BookTime .Error {
   font-size: small;
 }
 

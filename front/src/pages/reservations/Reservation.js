@@ -5,7 +5,6 @@ import './Reservation.css'
 function Reservation()
 {
 
-
 	const getToday = () =>{
 		const date = new Date();
 		const y = date.getFullYear();
@@ -25,12 +24,12 @@ function Reservation()
 	const facility1_default = "체육공원2호 체육시설"
 	const facility2_default = "테니스코트2"
 
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [isStartDateChecked, setIsStartDateChecked] = useState(false);
 	const [min, setMin] = useState("2022-02-25");
-	const [facility, setFacility] = useState(new Set());
-	const [facility_detail1, setFacilityDetail1] = useState(new Set());
-	const [facility_detail2, setFacilityDetail2] = useState(new Set());
+	const [facility, setFacility] = useState([]);
+	const [facility_detail1, setFacilityDetail1] = useState([]);
+	const [facility_detail2, setFacilityDetail2] = useState([]);
 	const [openDate, setOpenDate] = useState(null);
 	const [openTime, setOpenTime] = useState(null);
 	const [reserveDates, setReserveDates] = useState([new Date(0,0)]);
@@ -38,25 +37,22 @@ function Reservation()
 
 
 	useEffect(() => {
-		console.log("123");
 		getPlaces().then( function (data) {
 			data.map(function (data){
-				const temp = new Set();
-				facility.forEach(function(e){temp.add(e)})
-				temp.add(data["com_name"]);
-				setFacility(temp);
+				facility.push(data["com_name"]);
+				const temp = new Set(facility);
+				setFacility([...temp]);
 
-				const temp1 = new Set();
-				facility_detail1.forEach(function(e){temp1.add(e)})
-				temp1.add(data["part_name"]);
-				setFacilityDetail1(temp1);
+				facility_detail1.push(data["part_name"])
+				const temp1 = new Set(facility_detail1);
+				setFacilityDetail1([...temp1]);
 
-				const temp2 = new Set();
-				facility_detail2.forEach(function(e){temp2.add(e)})
-				temp2.add(data["place_name"]);
-				setFacilityDetail2(temp2);
+				facility_detail2.push(data["place_name"])
+				const temp2 = new Set(facility_detail2);
+				setFacilityDetail2([...temp2]);
+				setLoading(false);
 			})
-		}); // 토큰 확인용
+		});
 	}, [])
 
 	const getSetDay = (e) => {
@@ -243,6 +239,11 @@ function Reservation()
 		}
 	  }, [Check1,Check2,Check3,Check4,Check5,Check6,Check7,Check8])
 
+	console.log("@@@111")
+	console.log(facility)
+	console.log(facility_detail1)
+	console.log(facility_detail2)
+	console.log("@@@222")
 
 	return(
 		(loading)?<div>Loading...</div>:
@@ -270,13 +271,9 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<select id="facility" name="facility" className='Select' required defaultValue={facility_default}>
-								<option value="volvo">Volvo</option>
-								<option value="saab">Saab</option>
-								<option value="fiat">Fiat</option>
-								<option value="audi">Audi</option>
+							<select id="facility" name="facility" className='Select' required defaultValue={facility_default[0]}>
 								{facility.map((data) => (
-									<option value={data["com_name"]}>{data["com_name"]}</option>
+									<option key={data.id} value={data}>{data}</option>
 								))}
 							</select>
 						</div>
@@ -288,13 +285,9 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<select id="facility-detail1" name="facility-detail1" className='Select' required defaultValue={facility1_default}>
-								<option value="volvo">Volvo</option>
-								<option value="saab">Saab</option>
-								<option value="fiat">Fiat</option>
-								<option value="audi">Audi</option>
+							<select id="facility-detail1" name="facility-detail1" className='Select' required defaultValue={facility1_default[0]}>
 								{facility_detail1.map((data) => (
-									<option value={data["part_name"]}>{data["part_name"]}</option>
+									<option key={data.id} value={data}>{data}</option>
 								))}
 							</select>
 						</div>
@@ -306,13 +299,9 @@ function Reservation()
 							</formrowtitle>
 						</div>
 						<div className='Input'>
-							<select id="facility-detail2" name="facility-detail2" className='Select' required defaultValue={facility2_default}>
-								<option value="volvo">Volvo</option>
-								<option value="saab">Saab</option>
-								<option value="fiat">Fiat</option>
-								<option value="audi">Audi</option>
-								{facility2_default.map((data) => (
-									<option value={data["place_name"]}>{data["place_name"]}</option>
+							<select id="facility-detail2" name="facility-detail2" className='Select' required defaultValue={facility2_default[0]}>
+								{facility_detail2.map((data) => (
+									<option key={data.id} value={data}>{data}</option>
 								))}
 							</select>
 						</div>
@@ -337,7 +326,7 @@ function Reservation()
 						<div>
 							{reserveDates.map((date, index) => (
 								<div id="InputDate">
-									<input type="date" className='InputTag' onChange={(e) => onClickReserveDate(e, index)} min={min} required disabled={!isStartDateChecked}>
+									<input key={index} type="date" className='InputTag' onChange={(e) => onClickReserveDate(e, index)} min={min} required disabled={!isStartDateChecked}>
 									</input>
 								</div>
 							))}
@@ -357,7 +346,7 @@ function Reservation()
 						<formrowtitle>
 							회차옵션
 						</formrowtitle>
-						<div><contents>위 선택한 모든 날짜에 옵션이 적용됩니다.</contents></div>
+						<div className="Error">위 선택한 모든 날짜에 옵션이 적용됩니다.</div>
 						<div className='TableDiv'>
 							<table border="1">
 								<tr>
