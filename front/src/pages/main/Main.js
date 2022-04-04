@@ -12,24 +12,23 @@ function Main() {
     getPlaces().then(() => setLoading(false)); // 토큰 확인용
   }, [])
 
-  return (<div id="Container">
-      {isLoading ? (<h1>Loading...</h1>) : (<div>
+  return (<div><div id="Container">
+      {isLoading ? (<h1>Loading...</h1>) : (<div className="w-50">
           <Link to="/reservation">
             <div>
-              <button className="Button" >새 예약</button>
+              <button className="btn btn-outline-secondary border-dark rounded-pill btn-lg mb-5 fs-6" >새 예약</button>
             </div>
           </Link>
-          <div className="Margin50"></div>
           <Link to="/list">
             <div>
-              <button className="Button">예약 조회</button>
+              <button className="btn btn-outline-secondary border-dark rounded-pill btn-lg fs-6">예약 조회</button>
             </div>
           </Link>
-          <div className="Margin50"></div>
-          <div id="VersionText">현재 버전 v0.1</div>
         </div>
       )}
-    </div>);
+    </div>
+    <div id="VersionText" className="text text-muted fw-lighter text-center">현재 버전 v0.1</div>
+  </div>);
 }
 
 export default Main;

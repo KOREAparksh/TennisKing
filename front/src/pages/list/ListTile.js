@@ -2,6 +2,9 @@ import {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteReserve } from "../../api/api";
 import './ListTile.css'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 function ListTile({ id, openTime, place, reserveTimes }) {
   const stateStringList = ["대기 중", "취소", "완료"];
@@ -30,47 +33,36 @@ function ListTile({ id, openTime, place, reserveTimes }) {
   };
 
   return (
-    <div id="Container">
-      <div className="ListTile">
-        <div className="Margin25"/>
-        <div className={'StateContainer ' + stateColor[stateList[0]]}>{stateStringList[stateList[0]]}</div>
-        <div className="Margin10"/>
-        <div id="ContentsContainer">
-          <div className="ContentsBlock">
-            <div className="Margin10"></div>
-            <div className="TitleDiv">프로그램 예약 시작 시간</div>
-            <div className="ContentsDiv">{openTime.toLocaleString()}</div>
-            <div className="Margin10"></div>
-            <div className="TitleDiv">시설</div>
-            <div className="ContentsDiv">{place.com_name}</div>
-            <div className="Margin10"></div>
-            <div className="TitleDiv">시설상세1</div>
-            <div className="ContentsDiv">{place.part_name}</div>
-            <div className="Margin10"></div>
-            <div className="TitleDiv">시설상세2</div>
-            <div className="ContentsDiv">{place.place_name}</div>
-          </div>
-          <div className="ContentsBlock">
-            <div className="Margin10"></div>
-            <div className="TitleDivRight">예약회차</div>
-            <div>
-              {reserveTimes.map((e) => (
-                <div key={e.time} className="ContentsDivRight">
-                  {`${e.time.toLocaleDateString()} ${bookTimeMapper.get(e.time.getHours())}`}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="Margin25"/>
-        <div id="ButtonDiv">
-          <button className="Button" onClick={onClickModify}>수정</button>
-          <div className="Margin10"></div>
-          <button className="Button" onClick={onClickDelete}>삭제</button>
-          <div className="Margin25"></div>
-        </div>
+    <Row className="mt-5 mb-4 p-1 g-0 border border-dark text-responsive justify-content-center" style={{ backgroundColor: 'bisque', borderRadius: '1rem', }}>
+      <Row className={"fw-bold flex-row-reverse " + stateColor[stateList[0]]}>{stateStringList[stateList[0]]}</Row>
+      <Row className="mb-2 g-0">
+        <Col className="px-4 border-end border-dark">
+          <Row className="fw-bold">자동 예약 실행일</Row>
+          <Row className="mb-2">{openTime.toLocaleString()}</Row>
+
+          <Row className="fw-bold">시설</Row>
+          <Row className="mb-2">{place.com_name}</Row>
+          
+          <Row className="fw-bold">시설상세1</Row>
+          <Row className="mb-2">{place.part_name}</Row>
+
+          <Row className="fw-bold">시설상세2</Row>
+          <Row>{place.place_name}</Row>
+        </Col>
+        <Col className="px-4">
+          <Row className="fw-bold flex-row-reverse">예약회차</Row>
+          {reserveTimes.map((e) => (
+            <Row key={e.time} className="flex-row-reverse text-end">
+              {`${e.time.toLocaleDateString()} ${bookTimeMapper.get(e.time.getHours())}`}
+            </Row>
+          ))}
+        </Col>
+      </Row>
+      <div className="mb-2 btn-group" style={{maxWidth: "250px"}}>
+        <Button variant="outline-dark mx-3" size="sm" className="rounded-pill mb-1" onClick={onClickModify}>수정</Button>
+        <Button variant="outline-danger mx-3" size="sm" className="rounded-pill" onClick={onClickDelete}>삭제</Button>
       </div>
-    </div>
+    </Row>
   );
 }
 

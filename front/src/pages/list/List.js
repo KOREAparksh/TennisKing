@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ListTile from "./ListTile";
 import { getPlaces, getReserves } from "../../api/api";
 import { parseDate } from "../../util/date";
+import Container from 'react-bootstrap/Container';
 
 function List() {
   const [reserves, setReserves] = useState([]);
@@ -29,7 +30,7 @@ function List() {
   }, []);
 
   return (
-    <div>
+    <Container style={{maxWidth: "500px"}}>
       {reserves.map((reserve) => (
         <ListTile
           key={reserve.id}
@@ -39,7 +40,7 @@ function List() {
           reserveTimes={reserve.reserve_times}
         />
       ))}
-    </div>
+    </Container>
   );
 }
 

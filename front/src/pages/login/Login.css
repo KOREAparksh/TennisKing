@@ -11,25 +11,6 @@
 	text-align: center;
 }
 
-#Logo{
-	font-size: 40px;
-	margin-bottom: 150px;
-}
-
-#InputCode{
-	width: 350px;
-	height: 50px;
-	font-size: medium;
-	margin-bottom: 10px;
-}
-
-#LoginButton {
-	width: 100px;
-	height: 30px;
-	border-radius: 50px;
-}
-
-#WrongCode{
-	color: red;
-	margin-bottom: 10px;
+.btn {
+	height: 100%;
 }

@@ -1,4 +1,4 @@
-#Container{
+/* #Container{
 	margin: auto;
 	font-size: large;
 }
@@ -62,7 +62,7 @@
 	border-radius: 50px;
 }
 
-
+*/
 .Green{
 	color: green;
 }
@@ -73,13 +73,6 @@
 	color: red;
 }
 
-.Margin10{
-	height: 10px;
-}
-.Margin25{
-	height: 25px;
-}
-
-.Margin50{
-	height: 50px;
+.text-responsive {
+	font-size: min(calc(10% + 1vw + 1vh), 100%);
 }
