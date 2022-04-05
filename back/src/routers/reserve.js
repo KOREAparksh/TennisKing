@@ -52,7 +52,8 @@ router.get(
             });
             return reserves.map(reserve => {
                 reserve = toResponse(reserve);
-                reserve.reserve_time.map(date => {
+                reserve.open_time = gmt(reserve.open_time);
+                reserve.reserve_times.map(date => {
                     date = date.dataValues;
 
                     date.time = gmt(date.time);
