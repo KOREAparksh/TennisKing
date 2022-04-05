@@ -27,7 +27,7 @@ router.post(
             })
             return { status: httpStatus.OK, message: "OK" };
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
+            throw new ApiError(httpStatus.BAD_REQUEST, err);
         }
     })
 );
@@ -53,7 +53,7 @@ router.get(
                 return toResponse(reserve);
             });
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
+            throw new ApiError(httpStatus.BAD_REQUEST, err);
         }
     })
 );
@@ -80,7 +80,7 @@ router.get(
             }
             return toResponse(reserve);
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
+            throw new ApiError(httpStatus.BAD_REQUEST, err);
         }
     })
 );
@@ -114,7 +114,7 @@ router.patch(
             ]);
             return { status: httpStatus.OK, message: "OK" };
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
+            throw new ApiError(httpStatus.BAD_REQUEST, err);
         }
     })
 );
@@ -139,7 +139,7 @@ router.delete(
             });
             return { status: httpStatus.OK, message: "OK" };
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
+            throw new ApiError(httpStatus.BAD_REQUEST, err);
         }
     })
 );
