@@ -10,6 +10,7 @@ const terminus = require("../middlewares/terminus");
 const ApiError = require("../modules/api.error");
 const httpStatus = require("http-status");
 const { getReserveData, toResponse } = require("../controllers/reserve");
+const { gmt } = require("../modules/datetime");
 
 router.post(
     "/",
@@ -27,7 +28,7 @@ router.post(
             })
             return { status: httpStatus.OK, message: "OK" };
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, err);
+            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
         }
     })
 );
@@ -50,10 +51,17 @@ router.get(
                 }],
             });
             return reserves.map(reserve => {
-                return toResponse(reserve);
+                reserve = toResponse(reserve);
+                reserve.reserve_time.map(date => {
+                    date = date.dataValues;
+
+                    date.time = gmt(date.time);
+                })
+
+                return reserve;
             });
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, err);
+            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
         }
     })
 );
@@ -80,7 +88,7 @@ router.get(
             }
             return toResponse(reserve);
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, err);
+            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
         }
     })
 );
@@ -114,7 +122,7 @@ router.patch(
             ]);
             return { status: httpStatus.OK, message: "OK" };
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, err);
+            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
         }
     })
 );
@@ -139,7 +147,7 @@ router.delete(
             });
             return { status: httpStatus.OK, message: "OK" };
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, err);
+            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
         }
     })
 );

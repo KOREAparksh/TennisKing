@@ -13,7 +13,7 @@ router.get(
         try {
             return await Place.findAll();
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, err);
+            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
         }
     })
 );
@@ -24,7 +24,7 @@ router.get(
         try {
             return await Place.findByPk(parseInt(req.params.id));
         } catch (err) {
-            throw new ApiError(httpStatus.BAD_REQUEST, err);
+            throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
         }
     })
 );
