@@ -1,3 +1,5 @@
+const { gmt } = require("./datetime");
+
 const errMessages = {
     RESERVE_ERROR: "Outdated Reservatation",
     PARSE_ERROR: "Parse Error",
@@ -57,13 +59,19 @@ const getReserveData = (req) => {
 }
 
 const toResponse = (reserve) => {
+    reserve.open_time = gmt(reserve.open_time);
+    reserve.ReserveTimes.map(date => {
+        date = date.dataValues;
+        date.time = gmt(date.time);
+    })
     return {
         id: reserve.id,
         open_time: reserve.open_time,
         place_id: reserve.place_id,
         member: reserve.member,
         reserve_times: reserve.ReserveTimes,
-        use_facility: reserve.use_facility
+        use_facility: reserve.use_facility,
+        status: reserve.status
     }
 };
 

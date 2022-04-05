@@ -9,8 +9,7 @@ const ReserveTime = require("../models/reserve_time");
 const terminus = require("../middlewares/terminus");
 const ApiError = require("../modules/api.error");
 const httpStatus = require("http-status");
-const { getReserveData, toResponse } = require("../controllers/reserve");
-const { gmt } = require("../modules/datetime");
+const { getReserveData, toResponse } = require("../modules/parsing");
 
 router.post(
     "/",
@@ -44,22 +43,15 @@ router.get(
                     "place_id",
                     "member",
                     "use_facility",
+                    "status"
                 ],
                 include: [{
                     model: ReserveTime,
                     attributes: [ ["receipt_date", "time"], "status"],
                 }],
             });
-            return reserves.map(reserve => {
-                reserve = toResponse(reserve);
-                reserve.open_time = gmt(reserve.open_time);
-                reserve.reserve_times.map(date => {
-                    date = date.dataValues;
-
-                    date.time = gmt(date.time);
-                })
-
-                return reserve;
+            return reserves.reverse().map(reserve => {
+                return toResponse(reserve);
             });
         } catch (err) {
             throw new ApiError(httpStatus.BAD_REQUEST, "Bad Request");
@@ -77,7 +69,8 @@ router.get(
                     "open_time",
                     "place_id",
                     "member",
-                    "use_facility"
+                    "use_facility",
+                    "status"
                 ],
                 include: [{
                     model: ReserveTime,
