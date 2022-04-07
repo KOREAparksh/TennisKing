@@ -125,8 +125,9 @@ router.delete(
     "/:id",
     terminus(async (req, res) => {
         try {
+            const id = parseInt(req.params.id, 10);
             await Reserve
-            .findByPk(parseInt(req.params.id, 10))
+            .findByPk(id)
             .then(reserve => {
                 if (reserve == null)
                     throw "Absent Reserve";
@@ -135,7 +136,7 @@ router.delete(
                     throw "Too Late To Delete It"
                 }
                 reserve.destroy({
-                    where: { id: req.params.id },
+                    where: { id: id },
                     force: true,
                 })
             });
