@@ -20,10 +20,24 @@ const getReserveData = (req) => {
 
     const toReceiptTime = (time) => {
         const hour = new Date(time).getHours();
-        return parseInt(hour / 2, 10) - 3 +
-            (placeId === 1 ? 1833 : placeId === 2 ? 2210 : hour < 18 ? 2218 : hour === 18 ? 3305 : 2893);
+        const timeRule = (hour, placeId) => {
+            if (hour === 18) {
+                return 3308 + placeId;
+            } else if (hour === 20) {
+                return 2897 + placeId;
+            } else if ( hour === 6 || hour === 8 || hour === 10 || hour === 12 ||
+                        hour === 14 || hour === 16) {
+                const baseline = (placeId === 1 ? 1833 : placeId === 2 ? 2210 : 2218);
+                return baseline + (hour / 2) - 3;
+            }
+        }
+        const receiptTime = timeRule(parseInt(hour), placeId);
+        if (isNaN(receiptTime)) {
+            throw errMessages.PARSE_ERROR;
+        }
+        return receiptTime;
     };
-    const toReserveTImes = (times) => {
+    const toReserveTimes = (times) => {
         if (times == null) {
             return null;
         }
@@ -35,7 +49,7 @@ const getReserveData = (req) => {
         });
     }
 
-    const reserveTimes = toReserveTImes(req.body.reserve_times);
+    const reserveTimes = toReserveTimes(req.body.reserve_times);
     if (reserveTimes != null) {
         return {
             open_time: openTime,
@@ -45,8 +59,11 @@ const getReserveData = (req) => {
             ReserveTimes: reserveTimes,
         };
     } else {
-        const newReserveTimes = toReserveTImes(req.body.new_reserve_times);
-        const deleteReserveTimes =  toReserveTImes(req.body.delete_reserve_times);
+        const newReserveTimes = toReserveTimes(req.body.new_reserve_times);
+        const deleteReserveTimes =  toReserveTimes(req.body.delete_reserve_times);
+        if (newReserveTimes == null || deleteReserveTimes == null) {
+            throw errMessages.PARSE_ERROR;
+        }
         return {
             open_time: openTime,
             member: member,
