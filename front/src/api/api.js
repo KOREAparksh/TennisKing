@@ -34,7 +34,7 @@ client.interceptors.response.use(
 );
 
 export const getPlaces = async () => {
-	const response = await client.get("/places", {validateStatus: (status) => true});
+	const response = await client.get("/places");
 	return response;
 };
 
