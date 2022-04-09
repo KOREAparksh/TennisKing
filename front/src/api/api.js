@@ -34,8 +34,8 @@ client.interceptors.response.use(
 );
 
 export const getPlaces = async () => {
-	const { data } = await client.get("/places");
-	return data;
+	const response = await client.get("/places", {validateStatus: (status) => true});
+	return response;
 };
 
 export const login = async (code) => {
@@ -44,18 +44,25 @@ export const login = async (code) => {
 };
 
 export const getReserves = async () => {
-	const { data } = await client.get("/reserves");
+	const { data } = await client.get("/reserves", {validateStatus: (status) => true});
 	return data;
 };
 
 export const postReserves = async (open_time, place_id, member, reserve_times, use_facility) => {
-	const {data} = await client.post("reserves", {
-		open_time,
-		place_id,
-		member,
-		reserve_times,
-		use_facility,
-	});
+
+	const {data} = await client.post("/reserves",
+	{
+		"open_time" : open_time,
+		"place_id" : place_id,
+		"member" : member,
+		"reserve_times" : reserve_times,
+		"use_facility" : use_facility
+	}, {validateStatus: (status) => true});
+	return data;
+}
+
+export const getReserve = async (id) => {
+	const {data} = await client.get(`/reserves/${id}`, {validateStatus: (status) => true});
 	return data;
 }
 
