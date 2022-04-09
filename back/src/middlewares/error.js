@@ -20,7 +20,7 @@ const errorHandler = (err, req, res, next) => {
     let { statusCode, message, stack } = err;
 
     const response = {
-        code: statusCode,
+        status: statusCode,
         message: message,
     };
 

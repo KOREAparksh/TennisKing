@@ -102,15 +102,26 @@ router.patch(
                     where: {
                         reserve_id: reserve.id,
                         receipt_date: {
-                        [Op.or]: reserveData.delete_reserve_times.map(reserveTime => {
-                            return reserveTime.receipt_date
-                        })
+                            [Op.or]: reserveData.delete_reserve_times.map(reserveTime => {
+                                return reserveTime.receipt_date
+                            })
                         }
                     }
                 }),
                 reserveData.new_reserve_times.map(reserveTime => {
                     reserveTime.reserve_id = reserve.id;
-                    ReserveTime.create(reserveTime);
+                    ReserveTime.findOrCreate({
+                        where: {
+                            reserve_id: reserveTime.reserve_id,
+                            receipt_date: reserveTime.receipt_date,
+                            receipt_time: reserveTime.receipt_time
+                        },
+                        defaults: {
+                            reserve_id: reserveTime.reserve_id,
+                            receipt_date: reserveTime.receipt_date,
+                            receipt_time: reserveTime.receipt_time
+                        }
+                    });
                 }),
                 reserve.update(reserveData)
             ]);
@@ -125,8 +136,9 @@ router.delete(
     "/:id",
     terminus(async (req, res) => {
         try {
+            const id = parseInt(req.params.id, 10);
             await Reserve
-            .findByPk(parseInt(req.params.id, 10))
+            .findByPk(id)
             .then(reserve => {
                 if (reserve == null)
                     throw "Absent Reserve";
@@ -135,7 +147,7 @@ router.delete(
                     throw "Too Late To Delete It"
                 }
                 reserve.destroy({
-                    where: { id: req.params.id },
+                    where: { id: id },
                     force: true,
                 })
             });
