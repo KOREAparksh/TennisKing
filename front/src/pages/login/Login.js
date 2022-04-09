@@ -16,12 +16,17 @@ function Login(props) {
 	e.preventDefault();
 	if (text.length <= 0) return false;
 	try {
-	  await api.login(text);
-	  navigate("/");
+	  await api.login(text).then(function(response){
+		if (response.status === 200)
+			navigate("/");
+		else if (response.status === 401) {
+			setIsValid(false);
+		}
+		else if (response.status === 400) {
+		}
+	  });
 	} catch (err) {
-	  if (err.response.data.message === "Invalid Code") {
-		setIsValid(false);
-	  }
+		alert("오류가 발생했습니다. 관리자에게 문의하세요")
 	}
 	return false;
   };

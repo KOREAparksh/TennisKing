@@ -1,6 +1,4 @@
-import {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import {Link} from "react-router-dom";
 import { deleteReserve } from "../../api/api";
 import './ListTile.css'
 import Row from 'react-bootstrap/Row';
@@ -8,8 +6,10 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 function ListTile({ id, openTime, place, reserveTimes, status}) {
-	const stateStringList = ["대기 중", "완료", "에러"];
-	const stateColor = ["Green", "Blue", "Red"];
+	const stateStringList = ["대기 중", "완료", "실행 중"];
+	const stateColor = ["Green", "Blue", "text-danger"];
+	const timeStateStringList = ["", "성공", "실패"];
+	const timeStateColor = ["", "Blue", "text-danger"];
 	const bookTimeMapper = new Map([
 		[6, "1회 06:00 ~ 08:00"],
 		[8, "2회 08:00 ~ 10:00"],
@@ -25,7 +25,18 @@ function ListTile({ id, openTime, place, reserveTimes, status}) {
 	const onClickDelete = async () => {
 		if (window.confirm('정말 해당 예약을 삭제하시겠습니까?'))
 		{
-			await deleteReserve(id);
+			try{
+				await deleteReserve(id).then(function(data) {
+					if (data.status !== 200)
+					{
+						alert("삭제할 수 없는 예약입니다. 관리자에게 문의하세요")
+					}
+				});
+			}
+			catch(e){
+				alert("오류가 발생했습니다. 관리자에게 문의하세요")
+			}
+
 		}
 		navigate(0);
 	};
@@ -35,8 +46,18 @@ function ListTile({ id, openTime, place, reserveTimes, status}) {
 		return e.getFullYear()+""+e.getMonth()+e.getDate()
 	}
 
-	const getListTiles = () => {
+	const findStatus = (e) => {
+		let answer;
+		reserveTimes.find(function (data) {
+			if (data.time === e)
+				answer = data.status
+		});
+		return answer
+	}
+
+	const getTimeTables = () => {
 		var date_set = new Map()
+		console.log(reserveTimes)
 		reserveTimes.map(function (e){
 			const arr = date_set.get(getDateCode(e.time))
 			if (typeof(arr) === "object")
@@ -52,7 +73,14 @@ function ListTile({ id, openTime, place, reserveTimes, status}) {
 							{new Date(+e[1][0] +  3240 * 10000).toISOString().slice(0, 10)}
 						</div>
 						<div>
-							{e[1].map((e)=>(<div>{bookTimeMapper.get(e.getHours())}</div>))}
+							{e[1].map((e)=>(
+							<div>
+								<span className={timeStateColor[findStatus(e)] + " text-left"}>
+									{timeStateStringList[findStatus(e)]}
+								</span>
+
+								{"  " + bookTimeMapper.get(e.getHours())}
+							</div>))}
 						</div>
 					</Row>
 				)
@@ -79,7 +107,7 @@ function ListTile({ id, openTime, place, reserveTimes, status}) {
 		</Col>
 		<Col className="px-4">
 		  <Row className="fw-bold flex-row-reverse">예약회차</Row>
-		  {getListTiles()}
+		  {getTimeTables()}
 		</Col>
 	  </Row>
 	  <div className="mb-2 btn-group" style={{maxWidth: "250px"}} hidden={status === 0 ? false : true}>

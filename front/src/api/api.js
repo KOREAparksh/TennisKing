@@ -39,8 +39,8 @@ export const getPlaces = async () => {
 };
 
 export const login = async (code) => {
-	const { data } = await client.post("/code", { code });
-	return data;
+	const response = await client.post("/code", { code }, {validateStatus: (status) => true});
+	return response;
 };
 
 export const getReserves = async () => {
@@ -67,5 +67,6 @@ export const getReserve = async (id) => {
 }
 
 export const deleteReserve = async (id) => {
-	await client.delete(`/reserves/${id}`);
+	const {data} = await client.delete(`/reserves/${id}`, {validateStatus: (status) => true});
+	return data
 }
