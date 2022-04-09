@@ -215,7 +215,9 @@ function Reservation()
 			).then(function(data) {
 				if (data.status === 200){
 					alert("예약 등록이 완료되었습니다\n"
-							+ "프로그램시작 : " + open_date + "\n"
+							+ "프로그램시작 : "
+							+ open_date.getFullYear() + "년 " + open_date.getMonth() + "월 "
+							+ open_date.getDate() + "일 " + open_date.getHours() + "시" + "\n"
 							+ "시설 : " + com_name + "\n"
 							+ "상세1 : " + part_name + "\n"
 							+ "상세2 : " + place_name + "\n"
