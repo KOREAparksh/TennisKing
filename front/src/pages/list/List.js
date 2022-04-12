@@ -12,7 +12,6 @@ function List() {
 			const temp = await getPlaces();
 			const places = temp.data
 			const reserves = await getReserves();
-			console.log(reserves)
 				setReserves(
 				reserves.map((reserve) => {
 					const place = places.find((place) => place.id === reserve.place_id);
