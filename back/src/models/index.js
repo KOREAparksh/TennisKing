@@ -5,10 +5,8 @@ const Reserve = require("./reserve");
 const ReserveTime = require("./reserve_time");
 const AuthCdInfo = require("./auth_cd_info");
 
-const env = process.env.NODE_ENV;
-const config = require("../config/config")[env];
+const config = require("../config/config");
 const db = {};
-
 const sequelize = new Sequelize(config.database, config.username, config.password, config.options);
 
 db.sequelize = sequelize;
