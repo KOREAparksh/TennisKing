@@ -2,12 +2,12 @@ const axios = require("axios");
 const qs = require("qs");
 require("dotenv").config();
 
-const getSessionId = async () => {
+const getSessionId = async (login, password) => {
     const loginData = {
         process_check: "login",
         ret_url: "",
-        memid: process.env.NYJ_USERNAME,
-        mempw: process.env.NYJ_PASSWORD,
+        memid: login,
+        mempw: password,
     };
     const loginOptions = {
         method: "POST",
@@ -15,10 +15,12 @@ const getSessionId = async () => {
         data: qs.stringify(loginData),
         url: "https://www.nyj.go.kr/rent/member/process",
     };
-    const loginProcess = await axios(loginOptions);
-    const cookies = loginProcess.headers["set-cookie"];
 
-    return cookies[2].split(" ")[0];
+    return axios(loginOptions).then((loginProcess) => {
+        const cookies = loginProcess.headers["set-cookie"];
+
+        return cookies[2].split(" ")[0];
+    });
 };
 
 module.exports = getSessionId;

@@ -14,6 +14,14 @@ module.exports = class Reserve extends Sequelize.Model {
                     type: Sequelize.DATE,
                     allowNull: false,
                 },
+                login: {
+                    type: Sequelize.STRING,
+                    allowNull: false,
+                },
+                password: {
+                    type: Sequelize.STRING,
+                    allowNull: false,
+                },
                 member: {
                     type: Sequelize.INTEGER,
                     allowNull: false,

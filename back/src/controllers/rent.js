@@ -31,70 +31,82 @@ const getRentData = async (sessionId, place, reserveTime, member) => {
         data: qs.stringify(rentInputData),
         url: "https://www.nyj.go.kr/rent/rent/rentinput",
     };
-    const rentInputProcess = await axios(rentInputOptions);
-    const $ = cheerio.load(rentInputProcess.data);
 
-    return {
-        "receipt_time[]": rentInputData["receipt_time[]"],
-        "item_cd_list[]": $('select[name="item_cd_list[]"] option').val(),
-        "item_idx_not_list[]": $('input[name="item_idx_not_list[]"]').val(),
-        "facility_count[]": $('input[name="facility_count[]"]').val(),
-        "time_select[]": $('input[name="time_select[]"]').val(),
-        "facility_amt[]": $('input[name="facility_amt[]"]').val(),
-        "facility_sale_amt[]": $('input[name="facility_sale_amt[]"]').val(),
-        "discount[]": $('select[name="discount[]"] option').val(),
-        formcheck: $("#formcheck").val(),
-        URL: "https://www.nyj.go.kr/rent",
-        SSL: "https://www.nyj.go.kr/rent",
-        comcd: rentInputData.comcd,
-        sale_amt: $("#sale_amt").val(),
-        part_cd: rentInputData.partcd,
-        place_cd: rentInputData.placecd,
-        team_seq: $("#team_seq").val(),
-        payment_total_amt: "5,000", // 이부분 데이터 공정 필요?
-        receipt_date: rentInputData.receipt_date,
-        select_group: $("#select_group").val(),
-        appli_name: "%B1%E8%BC%BA%BC%F6", // 이름 변경 필요
-        club_name: "%B1%E8%BC%BA%BC%F6", // 단체이름 변경 필요
-        tel: "--", // 고정값
-        hp: `010-${$("#hp2").val()}-${$("#hp3").val()}`,
-        group_count: member,
-        group_count_man: "", // 빈값 넣어야 함
-        group_count_woman: "", // 빈값 넣어야 함
-        playname: "test1", // 사용자 입력 필요
-        reason: "test2", // 사용자 입력 필요
-        use_time_list: $("#use_time_list").val(),
-        use_item_list: $("#use_item_list").val(),
-    };
+    return axios(rentInputOptions).then((rentInputProcess) => {
+        const $ = cheerio.load(rentInputProcess.data);
+
+        return {
+            "receipt_time[]": rentInputData["receipt_time[]"],
+            "item_cd_list[]": $('select[name="item_cd_list[]"] option').val(),
+            "item_idx_not_list[]": $('input[name="item_idx_not_list[]"]').val(),
+            "facility_count[]": $('input[name="facility_count[]"]').val(),
+            "time_select[]": $('input[name="time_select[]"]').val(),
+            "facility_amt[]": $('input[name="facility_amt[]"]').val(),
+            "facility_sale_amt[]": $('input[name="facility_sale_amt[]"]').val(),
+            "discount[]": $('select[name="discount[]"] option').val(),
+            formcheck: $("#formcheck").val(),
+            URL: "https://www.nyj.go.kr/rent",
+            SSL: "https://www.nyj.go.kr/rent",
+            comcd: rentInputData.comcd,
+            sale_amt: $("#sale_amt").val(),
+            part_cd: rentInputData.partcd,
+            place_cd: rentInputData.placecd,
+            team_seq: $("#team_seq").val(),
+            payment_total_amt: "5,000", // 이부분 데이터 공정 필요?
+            receipt_date: rentInputData.receipt_date,
+            select_group: $("#select_group").val(),
+            appli_name: "%B4%D9%BB%EA%C5%D7%B4%CF%BD%BA%C5%AC%B7%B4", // 이름 변경 필요
+            club_name: "%B4%D9%BB%EA%C5%D7%B4%CF%BD%BA%C5%AC%B7%B4", // 단체이름 변경 필요
+            tel: "--", // 고정값
+            hp: `010-${$("#hp2").val()}-${$("#hp3").val()}`,
+            group_count: member,
+            group_count_man: "", // 빈값 넣어야 함
+            group_count_woman: "", // 빈값 넣어야 함
+            playname: "%C5%D7%B4%CF%BD%BA", // 사용자 입력 필요
+            reason: "%BF%EE%B5%BF", // 사용자 입력 필요
+            use_time_list: $("#use_time_list").val(),
+            use_item_list: $("#use_item_list").val(),
+        };
+    });
 };
 
-const executeRent = async (reserveTimeId, sessionId, rentData, start) => {
+const executeRent = async (reserveTimeId, sessionId, rentData, start, intervalId) => {
     const rentOptions = {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded", cookie: sessionId },
         data: qs.stringify(rentData),
         url: "https://www.nyj.go.kr/rent/rent/process/rent",
     };
-    const rentProcess = await axios(rentOptions);
-    const url = rentProcess.request.res.responseUrl.split("/").slice(-1)[0];
 
-    if (url.match(/[0-9]/g)) {
-        await ReserveTime.update({ status: 1 }, { where: { id: reserveTimeId } });
-        const end = new Date();
-        logger.reservation(
-            `Receipt: ${url}, Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${
-                rentData.part_cd
-            }-${rentData.place_cd}, Time: ${end - start} seconds`
-        );
-    } else {
-        await ReserveTime.update({ status: 2 }, { where: { id: reserveTimeId } });
-        const end = new Date();
-        logger.reservationFail(
-            `Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${rentData.part_cd}-${
-                rentData.place_cd
-            }, Time: ${end - start} seconds`
-        );
-    }
+    axios(rentOptions).then(async (rentProcess) => {
+        const url = rentProcess.request.res.responseUrl.split("/").slice(-1)[0];
+        console.log(rentProcess.headers);
+        const reserveTime = await ReserveTime.findOne({ where: { id: reserveTimeId } });
+
+        if (url.match(/[0-9]/g)) {
+            if (reserveTime.status !== 1) {
+                reserveTime.update({ status: 1 });
+                const end = new Date();
+                logger.reservation(
+                    `Receipt: ${url}, Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${
+                        rentData.part_cd
+                    }-${rentData.place_cd}, Time: ${end - start} seconds`
+                );
+            }
+            clearInterval(intervalId);
+        } else if (rentProcess.headers["content-length"] === "5543") {
+            if (reserveTime.status === 0) {
+                reserveTime.update({ status: 2 });
+                const end = new Date();
+                logger.reservationFail(
+                    `Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${rentData.part_cd}-${
+                        rentData.place_cd
+                    }, Time: ${end - start} seconds`
+                );
+            }
+            clearInterval(intervalId);
+        }
+    });
 };
 
 module.exports = { getRentData, executeRent };
