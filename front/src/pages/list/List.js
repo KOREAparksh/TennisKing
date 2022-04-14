@@ -7,29 +7,28 @@ import Container from "react-bootstrap/Container";
 function List() {
     const [reserves, setReserves] = useState([]);
 
-    useEffect(() => {
-        (async () => {
-            const temp = await getPlaces();
-            const places = temp.data;
-            const reserves = await getReserves();
-            setReserves(
-                reserves.map((reserve) => {
-                    const place = places.find((place) => place.id === reserve.place_id);
-                    const times = reserve.reserve_times.map((e) => ({
-                        ...e,
-                        time: parseDate(e.time),
-                    }));
-                    return {
-                        ...reserve,
-                        open_time: parseDate(reserve.open_time),
-                        reserve_times: times,
-                        place,
-                    };
-                })
-            );
-        })();
-    }, []);
-
+	useEffect(() => {
+		(async () => {
+			const temp = await getPlaces();
+			const places = temp.data
+			const reserves = await getReserves();
+				setReserves(
+				reserves.map((reserve) => {
+					const place = places.find((place) => place.id === reserve.place_id);
+					const times = reserve.reserve_times.map((e) => ({
+					...e,
+					time: parseDate(e.time),
+					}));
+					return {
+					...reserve,
+					open_time: parseDate(reserve.open_time),
+					reserve_times: times,
+					place,
+					};
+				})
+				);
+			})();
+	}, []);
     const getListTiles = () => {
         if (reserves.length <= 0) return <h1 className="text-center">텅...</h1>;
         return reserves.map((reserve, index) => (

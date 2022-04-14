@@ -37,8 +37,6 @@ function Reservation() {
             await getPlaces().then(function (response) {
                 if (response.status === 200) {
                     const data = response.data;
-                    console.log(response);
-                    console.log(data);
                     setPlaceList(data);
                     data.map(function (data) {
                         facility.push(data["com_name"]);
@@ -202,7 +200,6 @@ function Reservation() {
             if (Check8 === true) reserve_times.push(new Date(Date.parse(data) + 11 * hour_mili));
             return data;
         });
-        console.log(place_id);
         try {
             postReserves(open_date, place_id, login, password, person, reserve_times, option1 ? 1 : 0).then(function (data) {
                 if (data.status === 200) {
@@ -503,11 +500,11 @@ function Reservation() {
                                     ))}
                                 </div>
                                 <div>
-                                    <button id="btn" onClick={addDate}>
+                                    <button className="btn_class" onClick={addDate}>
                                         추가
                                     </button>
                                     <span> </span>
-                                    <button id="btn" onClick={deleteDate}>
+                                    <button className="btn_class" onClick={deleteDate}>
                                         삭제
                                     </button>
                                 </div>
@@ -632,7 +629,7 @@ function Reservation() {
                                 </div>
                             </div>
                             <Link to="/">
-                                <button type="button" id="btn" onClick={onSubmit}>
+                                <button type="button" className="btn_class" onClick={onSubmit}>
                                     예약
                                 </button>
                             </Link>

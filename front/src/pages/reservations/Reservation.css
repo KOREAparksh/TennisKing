@@ -129,7 +129,7 @@ button {
 
   legend
   {
-    margin: 10px 10px 50px 10px; 
+    margin: 10px 10px 50px 10px;
   }
   .Form
   {
@@ -152,9 +152,9 @@ button {
   button {
     width: 25%;
     height: 25px;
-    font-size:19px; 
+    font-size:19px;
   }
-  #btn{
+  .btn_class{
     font-size: 13px;
   }
   .TableDiv{
