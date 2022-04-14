@@ -7,7 +7,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const { notFound, errorConverter, errorHandler } = require("./middlewares/error");
-const logger = require("./modules/logger");
+// const logger = require("./modules/logger");
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -28,7 +28,7 @@ sequelize
     });
 
 app.use(cors(corsOptions));
-app.use(morgan("dev", { stream: logger.stream }));
+// app.use(morgan("dev", { stream: logger.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -29,9 +29,9 @@ const errorHandler = (err, req, res, next) => {
     }
 
     if (statusCode === httpStatus.INTERNAL_SERVER_ERROR) {
-        logger.error(stack);
+        // logger.error(stack);
     } else {
-        logger.warn(stack);
+        // logger.warn(stack);
     }
 
     res.status(statusCode).send(response);

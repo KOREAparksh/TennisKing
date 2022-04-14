@@ -3,7 +3,7 @@ const axios = require("axios");
 
 const Reserve = require("../models/reserve");
 
-const logger = require("./logger");
+// const logger = require("./logger");
 const JWT = require("./jwt");
 
 (async function () {
@@ -31,9 +31,9 @@ const JWT = require("./jwt");
         );
 
         if (results.length > 0) {
-            logger.cron(`${JSON.stringify(results)}\n`);
+            // logger.cron(`${JSON.stringify(results)}\n`);
         }
     } catch (err) {
-        logger.cron(`${err}\n`);
+        // logger.cron(`${err}\n`);
     }
 })();

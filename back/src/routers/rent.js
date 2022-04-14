@@ -8,7 +8,7 @@ const ReserveTime = require("../models/reserve_time");
 const terminus = require("../middlewares/terminus");
 const ApiError = require("../modules/api.error");
 const httpStatus = require("http-status");
-const logger = require("../modules/logger");
+// const logger = require("../modules/logger");
 const getSessionId = require("../modules/login");
 const { getRentData, executeRent } = require("../controllers/rent");
 
@@ -46,9 +46,9 @@ router.get(
                         setTimeout(() => clearInterval(intervalId), 2 * 60 * 1000);
                     }
                 } catch (err) {
-                    logger.reservationFail(
-                        `ReserveId: ${reserves.id}, PlaceId: ${reserves.Place.id}, ReserveTimeId: ${value.dataValues.id}\n${err}`
-                    );
+                    // logger.reservationFail(
+                    //     `ReserveId: ${reserves.id}, PlaceId: ${reserves.Place.id}, ReserveTimeId: ${value.dataValues.id}\n${err}`
+                    // );
                 }
             })
         ).then(async () => {
