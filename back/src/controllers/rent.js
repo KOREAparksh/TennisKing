@@ -33,6 +33,8 @@ const getRentData = async (sessionId, place, reserveTime, member) => {
     };
 
     return axios(rentInputOptions).then((rentInputProcess) => {
+        if (rentInputProcess.headers["content-length"] === "5543") throw "Rent fail";
+
         const $ = cheerio.load(rentInputProcess.data);
 
         return {
@@ -87,22 +89,6 @@ const executeRent = async (reserveTimeId, sessionId, rentData, start, intervalId
             if (reserveTime.status !== 1) {
                 reserveTime.update({ status: 1 });
                 const end = new Date();
-                // logger.reservation(
-                //     `Receipt: ${url}, Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${
-                //         rentData.part_cd
-                //     }-${rentData.place_cd}, Time: ${end - start} seconds`
-                // );
-            }
-            clearInterval(intervalId);
-        } else if (rentProcess.headers["content-length"] === "5543") {
-            if (reserveTime.status === 0) {
-                reserveTime.update({ status: 2 });
-                const end = new Date();
-                // logger.reservationFail(
-                //     `Date: ${rentData.receipt_date}-${rentData["receipt_time[]"]}, Place: ${rentData.comcd}-${rentData.part_cd}-${
-                //         rentData.place_cd
-                //     }, Time: ${end - start} seconds`
-                // );
             }
             clearInterval(intervalId);
         }

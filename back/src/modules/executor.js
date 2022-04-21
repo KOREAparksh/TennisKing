@@ -13,27 +13,22 @@ const JWT = require("./jwt");
         console.log(`Executor starts at ${new Date().toLocaleString()}`);
 
         const reserves = await Reserve.findAll();
-        const results = await Promise.allSettled(
-            reserves.map(async (value) => {
-                const now = new Date();
-                const open = new Date(value.open_time);
 
-                if (value.status !== 1 && open <= now && now <= new Date(Date.parse(open) + 10 * 60 * 1000)) {
-                    const executeOptions = {
-                        method: "GET",
-                        headers: { cookie: `access=${JWT.accessSign()}; refresh=${JWT.refreshSign()};` },
-                        url: `${process.env.API_ENDPOINT}/execute/${value.id}`,
-                    };
+        reserves.map((value) => {
+            const now = new Date();
+            const open = new Date(value.open_time);
 
-                    return axios(executeOptions).then((response) => response.data);
-                }
-            })
-        );
+            if (value.status !== 1 && value.status !== 3 && open <= now && now <= new Date(Date.parse(open) + 10 * 60 * 1000)) {
+                const executeOptions = {
+                    method: "GET",
+                    headers: { cookie: `access=${JWT.accessSign()}; refresh=${JWT.refreshSign()};` },
+                    url: `${process.env.API_ENDPOINT}/rent/execute/${value.id}`,
+                };
 
-        if (results.length > 0) {
-            // logger.cron(`${JSON.stringify(results)}\n`);
-        }
+                axios(executeOptions);
+            }
+        });
     } catch (err) {
-        // logger.cron(`${err}\n`);
+        console.log(err);
     }
 })();

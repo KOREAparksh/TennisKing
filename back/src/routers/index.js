@@ -9,7 +9,7 @@ const authorization = require("../middlewares/authorization");
 
 router.use("/places", authorization, placeRouter);
 router.use("/reserves", authorization, reserveRouter);
-router.use("/rent", authorization, rentRouter);
+router.use("/rent", rentRouter);
 router.use("/code", codeRouter);
 
 module.exports = router;

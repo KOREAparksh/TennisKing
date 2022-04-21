@@ -2,6 +2,8 @@ const axios = require("axios");
 const qs = require("qs");
 require("dotenv").config();
 
+const ApiError = require("./api.error");
+
 const getSessionId = async (login, password) => {
     const loginData = {
         process_check: "login",
@@ -18,6 +20,8 @@ const getSessionId = async (login, password) => {
 
     return axios(loginOptions).then((loginProcess) => {
         const cookies = loginProcess.headers["set-cookie"];
+
+        if (loginProcess.url === "https://www.nyj.go.kr/rent/message") throw "login fail";
 
         return cookies[2].split(" ")[0];
     });

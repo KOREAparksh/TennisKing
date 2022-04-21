@@ -30,20 +30,34 @@ router.get(
                 try {
                     if (value.dataValues.status !== 1) {
                         const intervalId = setInterval(() => {
-                            getSessionId(reserves.login, reserves.password).then((sessionId) => {
-                                const start = new Date();
-                                getRentData(
-                                    sessionId,
-                                    reserves.Place.dataValues,
-                                    value.dataValues,
-                                    reserves.dataValues.member
-                                ).then((rentData) => {
-                                    executeRent(value.dataValues.id, sessionId, rentData, start, intervalId);
+                            getSessionId(reserves.login, reserves.password)
+                                .then((sessionId) => {
+                                    const start = new Date();
+                                    getRentData(
+                                        sessionId,
+                                        reserves.Place.dataValues,
+                                        value.dataValues,
+                                        reserves.dataValues.member
+                                    )
+                                        .then((rentData) => {
+                                            executeRent(value.dataValues.id, sessionId, rentData, start, intervalId);
+                                        })
+                                        .catch((err) => {
+                                            const reserveTime = await ReserveTime.findOne({ where: { id: value.dataValues.id } });
+
+                                            if (reserveTime.status === 0)
+                                                reserveTime.update({ status: 2 });
+                                            
+                                            clearInterval(intervalId);
+                                        });
+                                })
+                                .catch((err) => {
+                                    Reserve.update({ status: 3 }, { where: { id: reserveId } });
+                                    clearInterval(intervalId);
                                 });
-                            });
                         }, 500);
 
-                        setTimeout(() => clearInterval(intervalId), 2 * 60 * 1000);
+                        setTimeout(() => clearInterval(intervalId), 5 * 60 * 1000);
                     }
                 } catch (err) {
                     // logger.reservationFail(
