@@ -6,8 +6,8 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 function ListTile({ id, login, openTime, place, reserveTimes, status }) {
-    const stateStringList = ["대기 중", "완료", "실행 중"];
-    const stateColor = ["Green", "Blue", "text-danger"];
+    const stateStringList = ["대기 중", "완료", "실행 중", "남양주시 로그인 실패"];
+    const stateColor = ["Green", "Blue", "text-danger", "text-secondary"];
     const timeStateStringList = ["", "성공", "실패"];
     const timeStateColor = ["", "Blue", "text-danger"];
     const bookTimeMapper = new Map([

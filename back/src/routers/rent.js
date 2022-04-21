@@ -52,6 +52,7 @@ router.get(
                                 })
                                 .catch((err) => {
                                     Reserve.update({ status: 3 }, { where: { id: reserveId } });
+                                    ReserveTime.update({ status: 2 }, { where: { id: reserveId } });
                                     clearInterval(intervalId);
                                 });
                         }, 500);
