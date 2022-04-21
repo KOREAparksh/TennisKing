@@ -70,10 +70,12 @@ router.get(
                 where: { id: reserveId },
             });
 
-            if (executed.ReserveTimes.filter((value) => value.status === 0).length === 0) {
-                await executed.update({ status: 1 });
-            } else if (executed.ReserveTimes.filter((value) => value.status === 0).length > 0) {
-                await executed.update({ status: 2 });
+            if (executed.status !== 3) {
+                if (executed.ReserveTimes.filter((value) => value.status === 0).length === 0) {
+                    await executed.update({ status: 1 });
+                } else if (executed.ReserveTimes.filter((value) => value.status === 0).length > 0) {
+                    await executed.update({ status: 2 });
+                }
             }
         });
 
