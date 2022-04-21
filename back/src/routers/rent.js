@@ -28,7 +28,7 @@ router.get(
         Promise.allSettled(
             reserves.ReserveTimes.map(async (value, idx) => {
                 try {
-                    if (value.dataValues.status !== 1) {
+                    if (value.dataValues.status !== 1 && value.dataValues.status !== 3) {
                         const intervalId = setInterval(() => {
                             getSessionId(reserves.login, reserves.password)
                                 .then((sessionId) => {
@@ -71,9 +71,14 @@ router.get(
                 where: { id: reserveId },
             });
 
-            if (executed.dataValues.status !== 3 && executed.ReserveTimes.filter((value) => value.status === 0).length === 0) {
+            if (
+                executed.dataValues.status !== 1 &&
+                executed.dataValues.status !== 3 &&
+                executed.ReserveTimes.filter((value) => value.status === 0).length === 0
+            ) {
                 await executed.update({ status: 1 });
             } else if (
+                executed.dataValues.status !== 1 &&
                 executed.dataValues.status !== 3 &&
                 executed.ReserveTimes.filter((value) => value.status === 0).length > 0
             ) {
