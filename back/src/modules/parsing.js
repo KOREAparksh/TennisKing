@@ -1,4 +1,5 @@
 const { gmt } = require("./datetime");
+const Reserve = require("../models/reserve");
 
 const errMessages = {
     RESERVE_ERROR: "Outdated Reservatation",
@@ -80,6 +81,11 @@ const getReserveData = (req) => {
 
 const toResponse = (reserve) => {
     reserve.open_time = gmt(reserve.open_time);
+    if (reserve.status !== 1 && reserve.status !== 3 && reserve.ReserveTimes.filter((value) => value.status === 0).length === 0) {
+        Reserve.update({ status: 1 }, { where: { id: reserve.id } });
+        reserve.id = 1;
+    }
+
     reserve.ReserveTimes.map((date) => {
         date = date.dataValues;
         date.time = gmt(date.time);
