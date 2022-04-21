@@ -90,8 +90,8 @@ const executeRent = async (reserveTimeId, sessionId, rentData, start, intervalId
                 reserveTime.update({ status: 1 });
                 const end = new Date();
             }
-            clearInterval(intervalId);
         }
+        clearInterval(intervalId);
     });
 };
 

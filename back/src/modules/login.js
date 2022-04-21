@@ -19,9 +19,10 @@ const getSessionId = async (login, password) => {
     };
 
     return axios(loginOptions).then((loginProcess) => {
-        const cookies = loginProcess.headers["set-cookie"];
-
+        console.log(loginProcess.url);
         if (loginProcess.url === "https://www.nyj.go.kr/rent/message") throw "login fail";
+
+        const cookies = loginProcess.headers["set-cookie"];
 
         return cookies[2].split(" ")[0];
     });
