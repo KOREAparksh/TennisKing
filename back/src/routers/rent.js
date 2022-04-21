@@ -42,12 +42,11 @@ router.get(
                                         .then((rentData) => {
                                             executeRent(value.dataValues.id, sessionId, rentData, start, intervalId);
                                         })
-                                        .catch((err) => {
+                                        .catch(async (err) => {
                                             const reserveTime = await ReserveTime.findOne({ where: { id: value.dataValues.id } });
 
-                                            if (reserveTime.status === 0)
-                                                reserveTime.update({ status: 2 });
-                                            
+                                            if (reserveTime.status === 0) reserveTime.update({ status: 2 });
+
                                             clearInterval(intervalId);
                                         });
                                 })
