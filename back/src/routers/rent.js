@@ -23,6 +23,8 @@ router.get(
 
         if (!reserves) {
             throw new ApiError(httpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+        } else {
+            reserves.update({ status: 2 });
         }
 
         Promise.allSettled(
@@ -57,7 +59,27 @@ router.get(
                                 });
                         }, 500);
 
-                        setTimeout(() => clearInterval(intervalId), 5 * 60 * 1000);
+                        setTimeout(() => {
+                            const executed = await Reserve.findOne({
+                                include: [{ model: ReserveTime }],
+                                where: { id: reserveId },
+                            });
+                
+                            executed.map((list) => {
+                                list.ReserveTimes.map((value) => {
+                                    if (value.status === 0) value.status = 2;
+                                });
+                            });
+
+                            if (
+                                executed.dataValues.status !== 1 &&
+                                executed.dataValues.status !== 3 &&
+                                executed.ReserveTimes.filter((value) => value.status === 0).length === 0
+                            ) {
+                                await executed.update({ status: 1 });
+                            }
+                            clearInterval(intervalId);
+                        }, 5 * 60 * 1000);
                     }
                 } catch (err) {
                     // logger.reservationFail(
@@ -69,12 +91,6 @@ router.get(
             const executed = await Reserve.findOne({
                 include: [{ model: ReserveTime }],
                 where: { id: reserveId },
-            });
-
-            executed.map((list) => {
-                list.ReserveTimes.map((value) => {
-                    if (value.status === 0) value.status = 2;
-                });
             });
 
             if (
