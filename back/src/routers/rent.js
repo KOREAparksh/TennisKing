@@ -65,21 +65,17 @@ router.get(
                                 where: { id: reserveId },
                             });
 
-                            executed.map((list) => {
-                                list.ReserveTimes.map((value) => {
-                                    if (value.status === 0) value.status = 2;
+                            if (executed.dataValues.status !== 1 && executed.dataValues.status !== 3) {
+                                executed.ReserveTimes.filter((value) => {
+                                    if (value.status === 0) ReserveTime.update({ status: 2 }, { where: value.id });
                                 });
-                            });
 
-                            if (
-                                executed.dataValues.status !== 1 &&
-                                executed.dataValues.status !== 3 &&
-                                executed.ReserveTimes.filter((value) => value.status === 0).length === 0
-                            ) {
-                                await executed.update({ status: 1 });
+                                executed.update({ status: 1 });
                             }
+
                             clearInterval(intervalId);
-                        }, 5 * 60 * 1000);
+                            resolve();
+                        }, 3 * 60 * 1000);
                     }
                 } catch (err) {
                     // logger.reservationFail(
