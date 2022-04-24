@@ -71,6 +71,12 @@ router.get(
                 where: { id: reserveId },
             });
 
+            executed.map((list) => {
+                list.ReserveTimes.map((value) => {
+                    if (value.status === 0) value.status = 2;
+                });
+            });
+
             if (
                 executed.dataValues.status !== 1 &&
                 executed.dataValues.status !== 3 &&

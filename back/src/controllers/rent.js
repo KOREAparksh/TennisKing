@@ -87,8 +87,7 @@ const executeRent = async (reserveTimeId, sessionId, rentData, start, intervalId
 
         if (url.match(/[0-9]/g)) {
             if (reserveTime.status !== 1) {
-                reserveTime.update({ status: 1 });
-                const end = new Date();
+                reserveTime.update({ status: 1, receipt_num: url });
             }
         }
         clearInterval(intervalId);
