@@ -60,21 +60,25 @@ router.get(
                         }, 500);
 
                         setTimeout(async () => {
-                            const executed = await Reserve.findOne({
-                                include: [{ model: ReserveTime }],
-                                where: { id: reserveId },
-                            });
+                            const result = await ReserveTime.findOne({ where: value.dataValues.id });
+                            const executed = await Reserve.findOne({ where: reserveId });
+                            if (result.status === 0) result.update({ status: 2 });
+                            if (executed.status !== 1 && executed.status !== 3) executed.update({ status: 1 });
 
-                            if (executed.dataValues.status !== 1 && executed.dataValues.status !== 3) {
-                                executed.ReserveTimes.filter((value) => {
-                                    if (value.status === 0) ReserveTime.update({ status: 2 }, { where: value.id });
-                                });
+                            // const executed = await Reserve.findOne({
+                            //     include: [{ model: ReserveTime }],
+                            //     where: { id: reserveId },
+                            // });
 
-                                executed.update({ status: 1 });
-                            }
+                            // if (executed.dataValues.status !== 1 && executed.dataValues.status !== 3) {
+                            //     executed.ReserveTimes.filter((value) => {
+                            //         if (value.status === 0) ReserveTime.update({ status: 2 }, { where: value.id });
+                            //     });
+
+                            //     executed.update({ status: 1 });
+                            // }
 
                             clearInterval(intervalId);
-                            resolve();
                         }, 3 * 60 * 1000);
                     }
                 } catch (err) {
