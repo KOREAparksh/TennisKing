@@ -59,12 +59,12 @@ router.get(
                                 });
                         }, 500);
 
-                        setTimeout(() => {
+                        setTimeout(async () => {
                             const executed = await Reserve.findOne({
                                 include: [{ model: ReserveTime }],
                                 where: { id: reserveId },
                             });
-                
+
                             executed.map((list) => {
                                 list.ReserveTimes.map((value) => {
                                     if (value.status === 0) value.status = 2;
