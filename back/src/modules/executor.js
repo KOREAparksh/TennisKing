@@ -18,7 +18,7 @@ const JWT = require("./jwt");
             const now = new Date();
             const open = new Date(value.open_time);
 
-            if (value.status !== 1 && value.status !== 3 && open <= now && now <= new Date(Date.parse(open) + 10 * 60 * 1000)) {
+            if (value.status !== 1 && value.status !== 3 && open <= now && now <= new Date(Date.parse(open) + 5 * 60 * 1000)) {
                 const executeOptions = {
                     method: "GET",
                     headers: { cookie: `access=${JWT.accessSign()}; refresh=${JWT.refreshSign()};` },
